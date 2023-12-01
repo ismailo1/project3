@@ -1,4 +1,4 @@
-# Global Salaries in Data World
+# Salaries in Data World
 
 Project 3 - Group 1 by Ismail Omer, Yargi Kilinc, Archit Hallan, Tania Barrera
 
