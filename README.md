@@ -1,6 +1,6 @@
 # Global Salaries in Data World
 
-Project 3 - Group 1 by Ismail Omer, Yargi Kilinc, Archit Hallan, Tania Barberra
+Project 3 - Group 1 by Ismail Omer, Yargi Kilinc, Archit Hallan, Tania Barrera
 
 ![image](https://github.com/ismailo1/project3/assets/142269763/7ae837cc-0079-46d0-b2c2-3b700ef0ac19)
 
