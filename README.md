@@ -12,7 +12,8 @@ This endeavor addresses pertinent questions within the domain:
 1.	What are the salary ranges across different countries (in USD)?
 2.	Which job titles command the highest and lowest remunerations?
 3.	Which job titles enjoy the highest popularity in each country, measured by counts?
-4.	In which country does one find the most lucrative salary offerings?
+4.	What is the increase of salaries in percentages by job titles?
+5.	In which country does one find the most lucrative salary offerings?
 
 Our sophisticated visuals provide profound insights:
 
