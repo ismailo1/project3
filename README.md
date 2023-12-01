@@ -1,5 +1,9 @@
-# project3
-Project 3 - Group 1
+# Global Salaries in Data World
+
+Project 3 - Group 1 by Ismail Omer, Yargi Kilinc, Archit Hallan, Tania Barberra
+
+![image](https://github.com/ismailo1/project3/assets/142269763/7ae837cc-0079-46d0-b2c2-3b700ef0ac19)
+
 
 I am delighted to present Project 3, a comprehensive exploration tailored for employers, job seekers in the data realm, individuals contemplating joining a bootcamp, and esteemed global HR companies.
 
@@ -18,3 +22,5 @@ Our sophisticated visuals provide profound insights:
 
 This initiative serves as your compass for well-informed decisions in hiring, job seeking, bootcamp considerations, and global HR strategies.
 
+**References**
+Head photo rights belongs to https://www.digitalvidya.com/blog/data-science-jobs/
