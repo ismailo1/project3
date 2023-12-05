@@ -30,7 +30,7 @@ else:
     print('Something went wrong.')
 
 # Read data
-salaries= pd.read_csv("Resources/salaries.csv")
+salaries= pd.read_csv("../Resources/salaries.csv")
 # Add data to sql database
 salaries.to_sql('salaries', engine, if_exists='replace', index=False)
 
