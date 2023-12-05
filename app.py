@@ -72,7 +72,7 @@ def api_routes():
     </ul>
     <p>Available dynamic route:</p>
     <ul>
-        <li><strong>/api/v1.0/salaries/&lt;country&gt;</strong>: returns all data, filtered by the specified country.</li>
+        <li><strong>/api/v1.0/&lt;column_name&gt;/&lt;value&gt;</strong>: returns data filtered using the specified column/value pair. (e.g. /api/v1.0/Company Location;/Canada will return all positions where the company is located in Canada)</li>
     </ul>
 
     '''
@@ -97,12 +97,12 @@ def salaries():
         data_list.append(row_dict)
     return jsonify(data_list)
 
-# Define what to do when a user hits the /api/v1.0/salaries route
-@app.route("/api/v1.0/salaries/<country>")
-def salaries_by_country(country):
-    print(f"Server received request for 'salaries' page filtered by country: {country}...")
+# Define what to do when a user hits the /api/v1.0/salaries/<column_name>/<value> route
+@app.route("/api/v1.0/<column_name>/<value>")
+def salaries_by_country(column_name, value):
+    print(f"Server received request for data page filtered by {column_name}: {value}...")
     # Query to find salaries data
-    query = text('SELECT * FROM "salaries" WHERE "Company Location" = ' + f"'{country}'")
+    query = text(f'SELECT * FROM "salaries" WHERE "{column_name}" = ' + f"'{value}'")
     data = engine.execute(query).all()
     print(f'Total records retrieved from salaries table: {len(data)}')
     # Create an empty list to add data
