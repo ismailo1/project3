@@ -2,8 +2,8 @@
 from flask import Flask, jsonify
 import pandas as pd
 # Python SQL toolkit and Object Relational Mapper
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session
+# from sqlalchemy.ext.automap import automap_base
+# from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, text
 # Import for creating a new database
 # Note: make sure to install sqlalchemy_utils and psycopg2
