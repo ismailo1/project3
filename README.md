@@ -22,7 +22,7 @@ Our sophisticated visuals provide profound insights:
 2.	Navigate through an interactive Map that evolves with country selection, offering a nuanced understanding of job title density and count globally,
 3.	Immerse yourself in a Bar Chart dynamically updating upon selecting a job title, unveiling the top 10 highest-paying countries in ascending order,
 4.	Immerse yourself in a Line Graph dynamically updating upon selecting a job title, unveiling the increase of salary level in percentage,
-5.	Explore a meticulously crafted Line Chart featuring two lines—salary against job title with individual salary dots, and a second line delineating the correlation between experience level and salary.
+5.	Explore a meticulously crafted Line Chart featuring two lines—salary against job title with individual salary dots, and a second line delineating the correlation between experience level and salary,
 6.	Line chart shows the correlation between experience level and salary.
 
 This initiative serves as your compass for well-informed decisions in hiring, job seeking, bootcamp considerations, and global HR strategies.
