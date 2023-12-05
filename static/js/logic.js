@@ -1,7 +1,12 @@
 // storing url for json data
-
+url = 'http://127.0.0.1:5000/api/v1.0/salaries'
 // console log to make sure the data is being read **only for testing**
-
+d3.json(url).then(
+    // if promise is fulfilled:
+    (data) => console.log(data),
+    // if promise is rejected:
+    () => console.log('data failed to load')
+);
 // fetch json data using d3 and console log
 
 // creating a function to display dropdown menu
