@@ -37,5 +37,6 @@ Additionaly, you can access the API via this same application. For route explana
 
 ---
 
-**References**
+## References
+
 Head photo rights belongs to https://www.digitalvidya.com/blog/data-science-jobs/
