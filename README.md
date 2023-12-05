@@ -5,7 +5,7 @@ Project 3 - Group 1 by Ismail Omer, Yargi Kilinc, Archit Hallan, Tania Barrera
 ![image](https://github.com/ismailo1/project3/assets/142269763/7ae837cc-0079-46d0-b2c2-3b700ef0ac19)
 
 
-I am delighted to present Project 3, a comprehensive exploration tailored for employers, job seekers in the data realm, individuals contemplating joining a bootcamp, and esteemed global HR companies.
+We are delighted to present Project 3, a comprehensive exploration tailored for employers, job seekers in the data realm, individuals contemplating joining a bootcamp, and esteemed global HR companies.
 
 This endeavor addresses pertinent questions within the domain:
 
@@ -26,6 +26,14 @@ Our sophisticated visuals provide profound insights:
 6.	Line chart shows the correlation between experience level and salary.
 
 This initiative serves as your compass for well-informed decisions in hiring, job seeking, bootcamp considerations, and global HR strategies.
+
+
+## Dashboard
+
+To visualize the dashboard, clone the repository into your machine and run the app.py flask application using `python app.py` from Terminal.
+
+
+---
 
 **References**
 Head photo rights belongs to https://www.digitalvidya.com/blog/data-science-jobs/
