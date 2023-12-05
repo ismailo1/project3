@@ -4,9 +4,12 @@ import pandas as pd
 # Python SQL toolkit and Object Relational Mapper
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 # Import for creating a new database
 # Note: make sure to install sqlalchemy_utils and psycopg2
+# Run in terminal: 
+# > pip install sqlalchemy_utils
+# > pip insall psycopg2
 from sqlalchemy_utils import database_exists, create_database
 
 #################################################
@@ -20,28 +23,38 @@ db_name = 'datascience'
 
 engine = create_engine(f"postgresql://{owner_username}:{password}@{host_name_address}/{db_name}")
 
-
 if not database_exists(engine.url):
     create_database(engine.url)
 
 if database_exists(engine.url):
-    print('Database connection was successful!')
+    print('Database was created successfully!')
 else:
     print('Something went wrong.')
 
 # Read data
-salaries= pd.read_csv("../Resources/salaries.csv")
+salaries = pd.read_csv("../Resources/salaries.csv")
+print('salaries.csv read')
+print(salaries.head())
 # Add data to sql database
-salaries.to_sql('salaries', engine, if_exists='replace', index=False)
+rows_added = salaries.to_sql('salaries', engine, if_exists='replace', index=False)
 
+print(f"{rows_added} rows were added successfully to salaries table.")
+
+# create list of columns
+columns = [
+    'Job Title',
+    'Employment Type',
+    'Expertise Level',
+    'Company Location',
+    'Salary in USD',
+    'Company Size',
+    'Year'
+]
 # Reflect an existing database into a new model
-Base = automap_base()
+# Base = automap_base()
 
-# Reflect the tables
-Base.prepare(autoload_with=engine)
-
-# Save references to each table
-Salaries = Base.classes.salaries
+# # Reflect the tables
+# Base.prepare(autoload_with=engine)
 
 #################################################
 # Flask Setup
@@ -72,16 +85,25 @@ def home():
 def tobs():
     print("Server received request for 'salaries' page...")
     # Create our session (link) from Python to the DB
-    session = Session(engine)
+    # session = Session(engine)
     # Query to find salaries data
-    data_query = (session
-                .query(Salaries)
-                .all()
-                )
+    # data_query = (session
+    #             .query(Salaries)
+    #             .all()
+    #             )
+    query = text(f'SELECT * FROM "salaries"')
+    data = engine.execute(query).all()
+    # empty list to add data
+    data_list = []
     # Loop through query results and put data values into a list
-    data_list = [row[0] for row in data_query]
+    for row in data:
+        row_dict = {}
+        for idx, column in enumerate(columns):
+            row_dict[column] = row[idx]
+
+        data_list.append(row_dict)
     # Close Session
-    session.close()
+    # session.close()
     return jsonify(data_list)
 
 if __name__ == "__main__":
