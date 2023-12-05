@@ -28,7 +28,7 @@ Our sophisticated visuals provide profound insights:
 This initiative serves as your compass for well-informed decisions in hiring, job seeking, bootcamp considerations, and global HR strategies.
 
 
-## Dashboard
+## How to
 
 To visualize the dashboard, clone the repository into your machine and run the app.py flask application using `python app.py` from Terminal. The Home page (i.e. `/`) will display the dashboard.
 
