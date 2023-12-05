@@ -63,15 +63,6 @@ def home():
     # html showing available routes
     print("Server received request for 'Home' page...")
     return render_template('index.html')
-    # return '''
-    # <h2>Welcome to the Salaries API!</h2>
-
-    # <p>Available static route:</p>
-    # <ul>
-    #     <li>/api/v1.0/salaries</li>
-    # </ul>
-
-    # '''
 
 # Define what to do when a user hits the /api/v1.0/salaries route
 @app.route("/api/v1.0/salaries")
