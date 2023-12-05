@@ -32,22 +32,18 @@ if not database_exists(engine.url):
     salaries.to_sql('salaries', engine, if_exists='replace', index=False)
 
 if database_exists(engine.url):
-    print('Database connection successful!')
+    print('Database connection was successful.')
 else:
     print('Something went wrong.')
 
 # Create the inspector and connect it to the engine
 inspector = inspect(engine)
-# Collect the names of tables within the database
-print('Tables in database:')
-print(inspector.get_table_names())
-# Using the inspector to print the column names within the 'salaries' table
+# Using the inspector to get the columns within the 'salaries' table
 inspected_columns = inspector.get_columns('salaries')
 # Create list of columns
 columns = [column['name'] for column in inspected_columns]
-print('Columns in salaries table:')
+print('Column names fetched from salaries table.')
 print(columns)
-
 #################################################
 # Flask Setup
 #################################################
@@ -63,6 +59,24 @@ def home():
     # html showing available routes
     print("Server received request for 'Home' page...")
     return render_template('index.html')
+
+# API home route, listing data routes
+@app.route("/api/v1.0/")
+def api_routes():
+    return '''
+    <h2>Welcome to the Data Science Salaries API!</h2>
+
+    <p>Available static route:</p>
+    <ul>
+        <li><strong>/api/v1.0/salaries</strong>: returns all data from the salaries table.</li>
+    </ul>
+    <p>Available dynamic route:</p>
+    <ul>
+        <li><strong>/api/v1.0/salaries/&lt;country&gt;</strong>: returns all data, filtered by the specified country.</li>
+    </ul>
+
+    '''
+
 
 # Define what to do when a user hits the /api/v1.0/salaries route
 @app.route("/api/v1.0/salaries")
@@ -81,8 +95,25 @@ def salaries():
             row_dict[column] = row[idx]
 
         data_list.append(row_dict)
-    # Close Session
-    # session.close()
+    return jsonify(data_list)
+
+# Define what to do when a user hits the /api/v1.0/salaries route
+@app.route("/api/v1.0/salaries/<country>")
+def salaries_by_country(country):
+    print(f"Server received request for 'salaries' page filtered by country: {country}...")
+    # Query to find salaries data
+    query = text('SELECT * FROM "salaries" WHERE "Company Location" = ' + f"'{country}'")
+    data = engine.execute(query).all()
+    print(f'Total records retrieved from salaries table: {len(data)}')
+    # Create an empty list to add data
+    data_list = []
+    # Loop through query results and put data values into a list
+    for row in data:
+        row_dict = {}
+        for idx, column in enumerate(columns):
+            row_dict[column] = row[idx]
+
+        data_list.append(row_dict)
     return jsonify(data_list)
 
 if __name__ == "__main__":
