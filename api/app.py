@@ -24,21 +24,22 @@ db_name = 'datascience'
 engine = create_engine(f"postgresql://{owner_username}:{password}@{host_name_address}/{db_name}")
 
 if not database_exists(engine.url):
+    print('Creating database...')
     create_database(engine.url)
+    # Read data
+    salaries = pd.read_csv("../Resources/salaries.csv")
+    print('salaries.csv read')
+    # Add data to sql database
+    rows_added = salaries.to_sql('salaries', engine, if_exists='replace', index=False)
+
+    print(f"{rows_added} rows were added successfully to salaries table.")
 
 if database_exists(engine.url):
-    print('Database was created successfully!')
+    print('Database connection successful!')
 else:
     print('Something went wrong.')
 
-# Read data
-salaries = pd.read_csv("../Resources/salaries.csv")
-print('salaries.csv read')
-# print(salaries.head())
-# Add data to sql database
-rows_added = salaries.to_sql('salaries', engine, if_exists='replace', index=False)
 
-print(f"{rows_added} rows were added successfully to salaries table.")
 
 # create list of columns
 columns = [
@@ -93,6 +94,7 @@ def salaries():
     #             )
     query = text(f'SELECT * FROM "salaries"')
     data = engine.execute(query).all()
+    print(f'Total records retrieved from salaries table: {len(data)}')
     # empty list to add data
     data_list = []
     # Loop through query results and put data values into a list
