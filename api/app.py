@@ -82,7 +82,7 @@ def home():
 
 # Define what to do when a user hits the /api/v1.0/salaries route
 @app.route("/api/v1.0/salaries")
-def tobs():
+def salaries():
     print("Server received request for 'salaries' page...")
     # Create our session (link) from Python to the DB
     # session = Session(engine)
