@@ -30,7 +30,9 @@ This initiative serves as your compass for well-informed decisions in hiring, jo
 
 ## Dashboard
 
-To visualize the dashboard, clone the repository into your machine and run the app.py flask application using `python app.py` from Terminal.
+To visualize the dashboard, clone the repository into your machine and run the app.py flask application using `python app.py` from Terminal. The Home page (i.e. `/`) will display the dashboard.
+
+Additionaly, you can access the API via this same application. For route explanation go to the `/api/v1.0/` page.
 
 
 ---
