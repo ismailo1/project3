@@ -34,7 +34,7 @@ else:
 # Read data
 salaries = pd.read_csv("../Resources/salaries.csv")
 print('salaries.csv read')
-print(salaries.head())
+# print(salaries.head())
 # Add data to sql database
 rows_added = salaries.to_sql('salaries', engine, if_exists='replace', index=False)
 
