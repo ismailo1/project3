@@ -1,10 +1,8 @@
 # Import the dependencies.
 from flask import Flask, jsonify
 import pandas as pd
-# Python SQL toolkit and Object Relational Mapper
-# from sqlalchemy.ext.automap import automap_base
-# from sqlalchemy.orm import Session
-from sqlalchemy import create_engine, text
+# Python SQL toolkit
+from sqlalchemy import create_engine, text, inspect
 # Import for creating a new database
 # Note: make sure to install sqlalchemy_utils and psycopg2
 # Run in terminal: 
@@ -23,39 +21,32 @@ db_name = 'datascience'
 
 engine = create_engine(f"postgresql://{owner_username}:{password}@{host_name_address}/{db_name}")
 
+# Create database if it does not exist already, and add data
 if not database_exists(engine.url):
     print('Creating database...')
     create_database(engine.url)
     # Read data
     salaries = pd.read_csv("../Resources/salaries.csv")
-    print('salaries.csv read')
+    print(f'{len(salaries)} rows read from salaries.csv')
     # Add data to sql database
-    rows_added = salaries.to_sql('salaries', engine, if_exists='replace', index=False)
-
-    print(f"{rows_added} rows were added successfully to salaries table.")
+    salaries.to_sql('salaries', engine, if_exists='replace', index=False)
 
 if database_exists(engine.url):
     print('Database connection successful!')
 else:
     print('Something went wrong.')
 
-
-
-# create list of columns
-columns = [
-    'Job Title',
-    'Employment Type',
-    'Expertise Level',
-    'Company Location',
-    'Salary in USD',
-    'Company Size',
-    'Year'
-]
-# Reflect an existing database into a new model
-# Base = automap_base()
-
-# # Reflect the tables
-# Base.prepare(autoload_with=engine)
+# Create the inspector and connect it to the engine
+inspector = inspect(engine)
+# Collect the names of tables within the database
+print('Tables in database:')
+print(inspector.get_table_names())
+# Using the inspector to print the column names within the 'salaries' table
+inspected_columns = inspector.get_columns('salaries')
+# Create list of columns
+columns = [column['name'] for column in inspected_columns]
+print('Columns in salaries table:')
+print(columns)
 
 #################################################
 # Flask Setup
@@ -85,17 +76,11 @@ def home():
 @app.route("/api/v1.0/salaries")
 def salaries():
     print("Server received request for 'salaries' page...")
-    # Create our session (link) from Python to the DB
-    # session = Session(engine)
     # Query to find salaries data
-    # data_query = (session
-    #             .query(Salaries)
-    #             .all()
-    #             )
     query = text(f'SELECT * FROM "salaries"')
     data = engine.execute(query).all()
     print(f'Total records retrieved from salaries table: {len(data)}')
-    # empty list to add data
+    # Create an empty list to add data
     data_list = []
     # Loop through query results and put data values into a list
     for row in data:
