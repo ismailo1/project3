@@ -1,5 +1,6 @@
 # Import the dependencies.
 from flask import Flask, jsonify
+import pandas as pd
 # Python SQL toolkit and Object Relational Mapper
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
@@ -15,7 +16,7 @@ from sqlalchemy_utils import database_exists, create_database
 owner_username = 'postgres'
 password = 'postgres'
 host_name_address = 'localhost'
-db_name = 'salaries_db'
+db_name = 'datascience'
 
 engine = create_engine(f"postgresql://{owner_username}:{password}@{host_name_address}/{db_name}")
 
@@ -27,6 +28,11 @@ if database_exists(engine.url):
     print('Database connection was successful!')
 else:
     print('Something went wrong.')
+
+# Read data
+salaries= pd.read_csv("Resources/salaries.csv")
+# Add data to sql database
+salaries.to_sql('salaries', engine, if_exists='replace', index=False)
 
 # Reflect an existing database into a new model
 Base = automap_base()
