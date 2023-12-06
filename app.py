@@ -86,16 +86,27 @@ def salaries():
     query = text(f'SELECT * FROM "salaries"')
     data = engine.execute(query).all()
     print(f'Total records retrieved from salaries table: {len(data)}')
-    # Create an empty list to add data
+    # Create empty lists to add data
     data_list = []
+    job_titles = []
+    countries = []
     # Loop through query results and put data values into a list
     for row in data:
         row_dict = {}
         for idx, column in enumerate(columns):
             row_dict[column] = row[idx]
-
+        job_titles.append(row_dict['Job Title'])
+        countries.append(row_dict['Company Location'])
         data_list.append(row_dict)
-    return jsonify(data_list)
+    countries = list(set(countries))
+    job_titles = list(set(job_titles))
+    result = {
+        'Company Location': countries,
+        'Job Title': job_titles,
+        'Data': data_list
+    }
+
+    return jsonify(result)
 
 # Define what to do when a user hits the /api/v1.0/salaries/<column_name>/<value> route
 @app.route("/api/v1.0/<column_name>/<value>")
@@ -105,16 +116,27 @@ def salaries_by_country(column_name, value):
     query = text(f'SELECT * FROM "salaries" WHERE "{column_name}" = ' + f"'{value}'")
     data = engine.execute(query).all()
     print(f'Total records retrieved from salaries table: {len(data)}')
-    # Create an empty list to add data
+    # Create empty lists to add data
     data_list = []
+    job_titles = []
+    countries = []
     # Loop through query results and put data values into a list
     for row in data:
         row_dict = {}
         for idx, column in enumerate(columns):
             row_dict[column] = row[idx]
-
+        job_titles.append(row_dict['Job Title'])
+        countries.append(row_dict['Company Location'])
         data_list.append(row_dict)
-    return jsonify(data_list)
+    countries = list(set(countries))
+    job_titles = list(set(job_titles))
+    result = {
+        'Company Location': countries,
+        'Job Title': job_titles,
+        'Data': data_list
+    }
+    return jsonify(result)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
