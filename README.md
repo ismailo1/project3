@@ -23,7 +23,7 @@ Our sophisticated visuals provide profound insights:
 3.	Immerse yourself in a Bar Chart dynamically updating upon selecting a job title, unveiling the top 10 highest-paying countries in ascending order,
 4.	Immerse yourself in a Line Graph dynamically updating upon selecting a job title, unveiling the increase of salary level in percentage,
 5.	Explore a meticulously crafted Line Chart featuring salary against job title with individual salary dots,
-6.	A line delineating the correlation between experience level and salary.
+6.	A line chart delineating the correlation between experience level and salary.
 
 This initiative serves as your compass for well-informed decisions in hiring, job seeking, bootcamp considerations, and global HR strategies.
 
