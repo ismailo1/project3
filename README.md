@@ -27,6 +27,8 @@ Our sophisticated visuals provide profound insights:
 
 This initiative serves as your compass for well-informed decisions in hiring, job seeking, bootcamp considerations, and global HR strategies.
 
+![image](https://github.com/ismailo1/project3/assets/142269763/f32a5946-e8c9-4451-aab3-e94490ec2b0d)
+
 
 ## How to
 
