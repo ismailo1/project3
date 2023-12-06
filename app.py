@@ -90,6 +90,7 @@ def salaries():
     data_list = []
     job_titles = []
     countries = []
+    expertise_levels = []
     # Loop through query results and put data values into a list
     for row in data:
         row_dict = {}
@@ -97,12 +98,15 @@ def salaries():
             row_dict[column] = row[idx]
         job_titles.append(row_dict['Job Title'])
         countries.append(row_dict['Company Location'])
+        expertise_levels.append(row_dict['Expertise Level'])
         data_list.append(row_dict)
     countries = list(set(countries))
     job_titles = list(set(job_titles))
+    expertise_levels = list(set(expertise_levels))
     result = {
         'Company Location': countries,
         'Job Title': job_titles,
+        'Expertise Level': expertise_levels,
         'Data': data_list
     }
 
@@ -120,6 +124,7 @@ def salaries_by_country(column_name, value):
     data_list = []
     job_titles = []
     countries = []
+    expertise_levels = []
     # Loop through query results and put data values into a list
     for row in data:
         row_dict = {}
@@ -127,14 +132,18 @@ def salaries_by_country(column_name, value):
             row_dict[column] = row[idx]
         job_titles.append(row_dict['Job Title'])
         countries.append(row_dict['Company Location'])
+        expertise_levels.append(row_dict['Expertise Level'])
         data_list.append(row_dict)
     countries = list(set(countries))
     job_titles = list(set(job_titles))
+    expertise_levels = list(set(expertise_levels))
     result = {
         'Company Location': countries,
         'Job Title': job_titles,
+        'Expertise Level': expertise_levels,
         'Data': data_list
     }
+
     return jsonify(result)
 
 
