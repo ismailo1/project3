@@ -22,10 +22,11 @@ function init () {
         let countries = data["Company Location"];
         // getting each country name and appending to dropdown menu
         countries.forEach(function(country) {
-            dropdown.append("option").text(country).property("value");            
+            dropdown.append("option").text(country).property("value", country);           
         });
         // calling function when first country is selected
-        firstchartvalues(countries[0]);       
+        firstchartvalues(countries[0]);
+        console.log(countries[0]);       
     }
     )};
 
@@ -52,7 +53,7 @@ function firstchartvalues(passedcountry) {
     });
 };
 
-
+init();
 
 
     // Creating a function for a Horizontal Bar Chart that dynamically updating upon selecting a country, unveiling the top 10 highest-paying job titles in ascending order
