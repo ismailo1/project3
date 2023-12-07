@@ -38,35 +38,14 @@ function optionChanged(passedcountry) {
 console.log("init1");
 
 // creating a function to be used to display horizontal bar chart and interactive map
-function firstchartvalues(passedcountry) {
-    // fetch json data using d3 and console log
-    d3.json(url).then(function(data) {
-        console.log(data);
-        // get country names data
-        let countries = data["Company Location"];
-        // filter data for the country selectedx
-        let filteredcountry = data.Data.filter(function(x){ return x["Company Location"] == passedcountry;});
-        // get data for bar chart
-        let filteredcountrydata = filteredcountry[0];
-        console.log(filteredcountrydata);
-        
-        // calling function to display horizontal bar chart
-        horizontalbarchart(filteredcountrydata);
-        // calling function to display interactive map
-        map(filteredcountrydata);
-    });
-};
-
-    // Creating a function for a Horizontal Bar Chart that dynamically updating upon selecting a country, unveiling the top 10 highest-paying (salaries) job titles in ascending order
-function horizontalbarchart(filteredcountrydata) {
-    console.log(filteredcountrydata);
-    
+// Move the horizontalbarchart function outside of the firstchartvalues function
+function horizontalbarchart(jobTitlesArray, passedcountry) {
     // Counting the total number of each job title
     let jobTitleCount = {};
-    filteredcountrydata["Job Title"].forEach(function(jobTitle) {
+    jobTitlesArray.forEach(function(jobTitle) {
         jobTitleCount[jobTitle] = (jobTitleCount[jobTitle] || 0) + 1;
     });
-    
+
     // Creating the bar chart
     let tracebarchart = {
         x: Object.values(jobTitleCount),
@@ -76,12 +55,40 @@ function horizontalbarchart(filteredcountrydata) {
     };
     let databarchart = [tracebarchart];
     let layoutbarchart = {
-        title: "Top 10 Highest-Paying Job Titles in " + filteredcountrydata["Company Location"],
-        xaxis: {title: "Salary (USD)"},
-        yaxis: {title: "Job Title"}
+        title: "Top 10 Highest-Paying Job Titles in " + passedcountry,
+        xaxis: { title: "Salary (USD)" },
+        yaxis: { title: "Job Title" }
     };
     Plotly.newPlot("bar", databarchart, layoutbarchart);
-};
+}
+
+function firstchartvalues(passedcountry) {
+    // fetch json data using d3 and console log
+    d3.json(url).then(function(data) {
+        console.log(data);
+        // filter data for the country selected
+        let filteredcountrydata = data.Data.filter(function(entry) {
+            return entry["Company Location"] === passedcountry;
+        });
+
+        if (filteredcountrydata.length > 0) {
+            // Extracting job titles for the selected country
+            let jobTitlesArray = filteredcountrydata.map(entry => entry["Job Title"]);
+            
+            // calling function to display horizontal bar chart
+            horizontalbarchart(jobTitlesArray, passedcountry);
+            // calling function to display interactive map
+            map(filteredcountrydata);
+        } else {
+            console.log("No data available for the selected country.");
+        }
+    });
+}
+
+// rest of your code...
+
+
+
 
 console.log(horizontalbarchart);
 
