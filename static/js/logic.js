@@ -37,6 +37,8 @@ function optionChanged(passedcountry) {
 
 console.log("init1");
 
+init1();
+
 // creating a function to be used to display horizontal bar chart and interactive map
 // Move the horizontalbarchart function outside of the firstchartvalues function
 function horizontalbarchart(jobTitlesArray, passedcountry) {
@@ -49,7 +51,7 @@ function horizontalbarchart(jobTitlesArray, passedcountry) {
     // Creating the bar chart
     let tracebarchart = {
         x: Object.values(jobTitleCount),
-        y: Object.keys(jobTitleCount),
+        y: Object.keys("Salary"),
         type: "bar",
         orientation: "h"
     };
@@ -85,16 +87,61 @@ function firstchartvalues(passedcountry) {
     });
 }
 
-// rest of your code...
-
-
-
-
 console.log(horizontalbarchart);
 
-    // Creating a function for an interactive Map that evolves with country selection, offering understanding of job title density and count globally
-function map() {
-    
+//function to create features to be used in the interactive map
+function createFeatures(datascienceData) {
+
+
+    // function to run once for each data in the array
+    function onEachFeature(data, layer) {
+        // giving each feature a popup describing the job title, company location, salary and expertise level
+        layer.bindPopup("<h3>" + data["Job Title"] + "</h3><hr><p>" + data["Company Location"] + "</p><hr><p>" + data["Salary"] + "</p><hr><p>" + data["Expertise Level"] + "</p>");
+    }
+
+    // creating a GeoJSON layer containing the features array on the datascienceData object
+    function pointToLayer(data, jobTitleCount) {
+        let options = {
+            radius: data["Salary"] / 10000,
+            fillColor: getColor(data["Salary"]),
+            color: getColor(data["Salary"]),
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
+        };
+        return L.circleMarker(jobTitleCount, options);
+    }
+
+    // creating a variable for the GeoJSON layer
+    let datascience = L.geoJSON(datascienceData, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer
+    });
+}
+
+// creating a function to determine the color of the marker based on the salary
+function getColor(salary) {
+    switch (true) {
+        case salary > 200000:
+            return "#FF0000";
+        case salary > 150000:
+            return "#FFA500";
+        case salary > 100000:
+            return "#FFFF00";
+        case salary > 50000:
+            return "#008000";
+        case salary > 25000:
+            return "#0000FF";
+        default:
+            return "#4B0082";
+    }
+}
+
+
+// Creating a function for an interactive Map that evolves with country selection, offering understanding of job title density and count globally
+function map(datascience) {
+    console.log(datascience);
+        
     // Adding a tile layer (the background map image) to our map
     let streetmap = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: `&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors`
@@ -134,7 +181,8 @@ console.log(map);
 
 console.log("logic.js loaded");
 
-init1();
+
+
 
 
 // console log init here
