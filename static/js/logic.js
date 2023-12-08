@@ -3,10 +3,8 @@ const url = 'http://127.0.0.1:5000/api/v1.0/salaries'
 // console log to make sure the data is being read **only for testing**
 console.log(url);
 
-// fetch json data using d3 and console log
-// d3.json(url).then(function(data) {
-//     console.log(data);
-// });
+// define myMap
+let myMap;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -37,7 +35,7 @@ function optionChanged(passedcountry) {
 
 console.log("init1");
 
-init1();
+// init1();
 
 // creating a function to be used to display horizontal bar chart and interactive map
 // Move the horizontalbarchart function outside of the firstchartvalues function
@@ -79,8 +77,8 @@ function firstchartvalues(passedcountry) {
             
             // calling function to display horizontal bar chart
             horizontalbarchart(jobTitlesArray, passedcountry);
-            // calling function to display interactive map
-            map(filteredcountrydata);
+            // // calling function to display interactive map
+            // createMap(filteredcountrydata);
         } else {
             console.log("No data available for the selected country.");
         }
@@ -117,6 +115,10 @@ function createFeatures(datascienceData) {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer
     });
+
+    // sending the datascience layer to the createMap function
+    createMap(datascience);
+    
 }
 
 // creating a function to determine the color of the marker based on the salary
@@ -138,10 +140,11 @@ function getColor(salary) {
 }
 
 
+
 // Creating a function for an interactive Map that evolves with country selection, offering understanding of job title density and count globally
-function map(datascience) {
+function createMap(datascience) {
     console.log(datascience);
-        
+
     // Adding a tile layer (the background map image) to our map
     let streetmap = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: `&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors`
@@ -168,6 +171,7 @@ function map(datascience) {
         zoom: 2,
         layers: [streetmap, jobtitledensity]
     });
+    
             
     // creating a layer control
     // passing in our baseMaps and overlayMaps
@@ -177,11 +181,11 @@ function map(datascience) {
     }).addTo(myMap);
 };
 
-console.log(map);
+// console.log(map);
 
 console.log("logic.js loaded");
 
-
+init1();
 
 
 
@@ -397,3 +401,5 @@ console.log("logic.js loaded");
 
 // // adding init() 
 // init3();
+// defining jobtitledensity
+let jobtitledensity = "Job Title Density";
