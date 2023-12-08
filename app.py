@@ -20,6 +20,7 @@ host_name_address = 'localhost'
 db_name = 'datascience'
 
 engine = create_engine(f"postgresql://{owner_username}:{password}@{host_name_address}/{db_name}")
+conn = engine.connect()
 
 # Create database if it does not exist already, and add data
 if not database_exists(engine.url):
@@ -84,7 +85,8 @@ def salaries():
     print("Server received request for 'salaries' page...")
     # Query to find salaries data
     query = text(f'SELECT * FROM "salaries"')
-    data = engine.execute(query).all()
+    # data = engine.execute(query).all()
+    data = conn.execute(query).all()
     print(f'Total records retrieved from salaries table: {len(data)}')
     # Create empty lists to add data
     data_list = []
@@ -118,7 +120,8 @@ def salaries_by_country(column_name, value):
     print(f"Server received request for data page filtered by {column_name}: {value}...")
     # Query to find salaries data
     query = text(f'SELECT * FROM "salaries" WHERE "{column_name}" = ' + f"'{value}'")
-    data = engine.execute(query).all()
+    # data = engine.execute(query).all()
+    data = conn.execute(query).all()
     print(f'Total records retrieved from salaries table: {len(data)}')
     # Create empty lists to add data
     data_list = []
