@@ -108,6 +108,10 @@ console.log(salariesArray);
 // console log passedcountry here
 console.log(passedcountry);
 
+// console log filteredcountrydata here
+console.log(filteredcountrydata);
+
+
 
 
 //function to create features to be used in the interactive map
@@ -350,62 +354,70 @@ function thirdchartvalues(passedexpertise) {
     // fetch json data using d3 and console log
     d3.json(url).then(function(data) {
         console.log(data);
-        // get expertise level data
-        let expertises = data["Expertise Level"];
         // filter data for the expertise level selected
-        let filteredexpertise = expertises.filter(expertise => expertise === passedexpertise);
+        let filteredexpertisedata = data.Data.filter(function(entry) {
+            return entry["Expertise Level"] === passedexpertise;
+        });
         // get data for line chart
-        let filteredexpertisedata = filteredexpertise[0].filteredexpertisedata;
-        console.log(filteredexpertisedata);
-            
+        let filteredexpertisedata2 = filteredexpertisedata[0].filteredexpertisedata;
+        console.log(filteredexpertisedata2);
         // calling function to display line chart
-        linechart(filteredexpertisedata);
+        linechart(filteredexpertisedata2);
     });
-};   
-
+}
     
 // Creating a function for a Line Chart featuring salary against job title with individual salary dots that updates upon selecting an expertise level
-function layoutlinechart2(filteredexpertisedata) {
-    console.log(filteredexpertisedata);
+function linechart(filteredexpertisedata2) {
+    console.log(filteredexpertisedata2);
         
     // Creating the line chart
     let tracelinechart = {
-        x: filteredexpertisedata["Job Title"],
-        y: filteredexpertisedata["Salary"],
-        type: "line"
+        x: filteredexpertisedata2["Job Title"],
+        y: filteredexpertisedata2["Salary"],
+        mode: "markers+lines"
     };
     let datalinechart = [tracelinechart];
     let layoutlinechart = {
-        title: "Salary Level for " + filteredexpertisedata["Expertise Level"],
+        title: "Salary for " + filteredexpertisedata2["Expertise Level"],
         xaxis: {title: "Job Title"},
         yaxis: {title: "Salary (USD)"}
     };
     Plotly.newPlot("line", datalinechart, layoutlinechart);
 }
+
+
 // Creating a line chart that shows the correlation between experience level and salary
-function linechart2(filteredexpertisedata) {
-    console.log(filteredexpertisedata);
+function linechart2(filteredexpertisedata2) {
+    console.log(filteredexpertisedata2);
         
     // Creating the line chart
     let tracelinechart2 = {
-        x: filteredexpertisedata["Years of Experience"],
-        y: filteredexpertisedata["Salary"],
-        type: "line"
+        x: filteredexpertisedata2["Years of Experience"],
+        y: filteredexpertisedata2["Salary"],
+        mode: "markers+lines"
     };
     let datalinechart2 = [tracelinechart2];
     let layoutlinechart2 = {
-        title: "Salary Level for " + filteredexpertisedata["Expertise Level"],
+        title: "Salary for " + filteredexpertisedata2["Expertise Level"],
         xaxis: {title: "Years of Experience"},
         yaxis: {title: "Salary (USD)"}
     };
     Plotly.newPlot("line", datalinechart2, layoutlinechart2);
 }
 
+// console log linechart here
 console.log(linechart);
+// console log linechart2 here
 console.log(linechart2);
+// console log filteredexpertisedata2 here
+console.log(filteredexpertisedata2);
+// console log passedexpertise here
+console.log(passedexpertise);
+// console log filteredexpertisedata here
+console.log(filteredexpertisedata);
+// console log expertise here
+console.log(expertise);
 
-
-console.log("logic.js loaded");
 
 // console log init here
 // console.log("init");
