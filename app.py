@@ -66,15 +66,17 @@ def dict_from_query_top10(query_string, conn_object, group_by_column):
     df = (df
         .groupby(group_by_column)
         .agg(
-            mean_salary = (salary_column, 'mean'),
-            max_salary = (salary_column, 'max'),
-            min_salary = (salary_column, 'min'),
-            median_salary = (salary_column, lambda x: np.median(x))
+            by_mean_salary = (salary_column, 'mean'),
+            by_max_salary = (salary_column, 'max'),
+            by_min_salary = (salary_column, 'min'),
+            by_median_salary = (salary_column, lambda x: np.median(x))
         )
     )
-    print(df)
-    data_list = df.to_dict(orient='dict')
-    return data_list
+    result = {}
+    for col_name in df:
+        col_top10 = df[col_name].sort_values().head(10)
+        result[col_name] = col_top10.to_dict()
+    return result
 
 #################################################
 # Database Setup
