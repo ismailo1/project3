@@ -23,7 +23,6 @@ salary_column = 'Salary in USD'
 size_column = 'Company Size'
 year_column = 'Year'
 
-
 # function to return result dictionary, given a query string and a connection object
 def dict_from_query(query_string, conn_object):
     # Instead of using:
@@ -74,8 +73,21 @@ def dict_from_query_top10(query_string, conn_object, group_by_column):
     )
     result = {}
     for col_name in df:
-        col_top10 = df[col_name].sort_values(ascending=False).head(10)
-        result[col_name] = col_top10.to_dict()
+        col_top10 = (df[col_name]
+            .rename('salary')
+            .sort_values(ascending=False)
+            .head(10)
+            .reset_index(drop=False)
+        )
+        col_top10.index += 1 
+        # organize result in dictionary of dictionaries
+        result[col_name] = col_top10.to_dict(orient='index')
+        for record in result[col_name]:
+            record_data = result[col_name][record]
+            result[col_name][record] = [
+                record_data[group_by_column],
+                record_data['salary']
+            ]
     return result
 
 #################################################
@@ -141,7 +153,9 @@ def api_routes():
     </ul>
     <p>Available dynamic route:</p>
     <ul>
-        <li><strong>/api/v1.0/&lt;column_name&gt;/&lt;value&gt;</strong>: returns data filtered using the specified column/value pair. (e.g. /api/v1.0/Company Location;/Canada will return all positions where the company is located in Canada)</li>
+        <li><strong>/api/v1.0/&lt;column_name&gt;/&lt;value&gt;</strong>: returns data filtered using the specified column/value pair. (e.g. <i>/api/v1.0/Company Location/Canada</i> will return all positions where the company is located in Canada)</li>
+        <li><strong>/api/v1.0/top10_titles_by_country/&lt;country_name&gt;</strong>: returns data filtered by the indicated country_name, from the Company Location column. It returns the top 10 job titles by several different summary statistics of the salary in USD (e.g. <i>/api/v1.0/top10_titles_by_country/Mexico</i> will return the top 10 job titles by salary where the company is based in Mexico, as a list of dictionaries, one dictionary for each summary statistic: mean, max, min and median)</li>
+        <li><strong>/api/v1.0/top10_countries_by_title/&lt;title_name&gt;</strong>: returns data filtered by the indicated title_name. It returns the top 10 countries by several different summary statistics of the salary in USD (e.g. <i>/api/v1.0/top10_countries_by_title/Data Analyst</i> will return the top 10 countries based on salary of the Data Analyst job title, as a list of dictionaries, one dictionary for each summary statistic: mean, max, min and median)</li>
     </ul>
 
     '''
