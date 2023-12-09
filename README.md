@@ -20,18 +20,18 @@ Our sophisticated visuals provide profound insights:
 
 **By Selecting COUNTRY from Dropdown1**
 
-1.	a Horizontal Bar Chart that displays the top 10 highest-paying job titles in ascending order,
-2.	an interactive Map displaying total number of all job titles with a popup marker,
+1.	a horizontal bar chart that displays the top 10 highest-paying job titles in ascending order (TANIA - PLS CREATE AN API ROUTE),
+2.	an interactive Map displaying total number of all job titles with a popup marker (TANIA - PLS CREATE AN API ROUTE),
 
 **By Selecting JOB TITLE from Dropdown2**
 
-3.	Immerse yourself in a Bar Chart dynamically updating upon selecting a job title, unveiling the top 10 highest-paying countries in ascending order,
-4.	Immerse yourself in a Line Graph dynamically updating upon selecting a job title, unveiling the increase of salary level in percentage,
+3.	a bar chart that displays the top 10 highest paying countries in ascending order (TANIA - PLS CREATE AN API ROUTE),
+4.	an interactive bubble map that displays the top 10 highest paying countries,
 
 **By Selecting EXPERIENCE LEVEL from Dropdown3**
 
-5.	Explore a meticulously crafted Line Chart featuring salary against job title with individual salary dots,
-6.	A line chart delineating the correlation between experience level and salary.
+5.	a bar chart that displays Top10 highest paying countries for that experience level (TANIA - PLS CREATE AN API ROUTE),
+6.	an interactive bubble map that displays experience level selected with salaries for all countries (TANIA - PLS CREATE AN API ROUTE).
 
 This initiative serves as your compass for well-informed decisions in hiring, job seeking, bootcamp considerations, and global HR strategies.
 
