@@ -20,8 +20,8 @@ Our sophisticated visuals provide profound insights:
 
 **By Selecting COUNTRY from Dropdown1**
 
-1.	Immerse yourself in a Horizontal Bar Chart dynamically updating upon selecting a country, unveiling the top 10 highest-paying job titles in ascending order,
-2.	Navigate through an interactive Map that evolves with country selection, offering a nuanced understanding of job title density and count globally,
+1.	a Horizontal Bar Chart that displays the top 10 highest-paying job titles in ascending order,
+2.	an interactive Map displaying total number of all job titles with a popup marker,
 
 **By Selecting JOB TITLE from Dropdown2**
 
