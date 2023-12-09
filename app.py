@@ -74,7 +74,7 @@ def dict_from_query_top10(query_string, conn_object, group_by_column):
     )
     result = {}
     for col_name in df:
-        col_top10 = df[col_name].sort_values().head(10)
+        col_top10 = df[col_name].sort_values(ascending=False).head(10)
         result[col_name] = col_top10.to_dict()
     return result
 
@@ -165,11 +165,9 @@ def salaries_filter(column_name, value):
     result = dict_from_query(query, conn)
     return jsonify(result)
 
-# 3) country filter -> mean of salary by job title -> return top 10 values and job titles
-
 # Define what to do when a user hits the /api/v1.0/top10_titles_by_country/<country_name> route
 @app.route("/api/v1.0/top10_titles_by_country/<country_name>")
-def salaries_by_country(country_name):
+def salaries_by_country_top10_titles(country_name):
     print(f"Server received request for top 10 payed job titles in {country_name}...")
     # Query to find salaries data
     query = f'SELECT * FROM "salaries" WHERE "{country_column}" = ' + f"'{country_name}'"
@@ -177,9 +175,16 @@ def salaries_by_country(country_name):
     return jsonify(result)
 
 
+# Define what to do when a user hits the /api/v1.0/top10_countries_by_title/<title_name> route
+@app.route("/api/v1.0/top10_countries_by_title/<title_name>")
+def salaries_by_title_top10_countries(title_name):
+    print(f"Server received request for top 10 payed job titles in {title_name}...")
+    # Query to find salaries data
+    query = f'SELECT * FROM "salaries" WHERE "{title_column}" = ' + f"'{title_name}'"
+    result = dict_from_query_top10(query, conn, 'Company Location')
+    return jsonify(result)
 
 
-# 4) job title filter -> mean salary by country -> return top 10 values and countries
 # 5) job title filter -> mean salary by expertise -> % change
 # 6) mean salary by job title and expertise grouping -> return together with individual data points
 
