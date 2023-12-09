@@ -1,6 +1,7 @@
 # Import the dependencies.
 from flask import Flask, jsonify, render_template
 import pandas as pd
+import numpy as np
 # Python SQL toolkit
 from sqlalchemy import create_engine, text, inspect
 # Import for creating a new database
@@ -9,6 +10,71 @@ from sqlalchemy import create_engine, text, inspect
 # > pip install sqlalchemy_utils
 # > pip insall psycopg2
 from sqlalchemy_utils import database_exists, create_database
+
+#################################################
+# General variables
+
+# Column names
+title_column = 'Job Title'
+employment_type_column = 'Employment Type'
+expertise_column = 'Expertise Level'
+country_column = 'Company Location'
+salary_column = 'Salary in USD'
+size_column = 'Company Size'
+year_column = 'Year'
+
+
+# function to return result dictionary, given a query string and a connection object
+def dict_from_query(query_string, conn_object):
+    # Instead of using:
+    # data = conn.execute(text(query)).all()
+    # Read query directly into pandas df
+    df = pd.read_sql(query_string, conn_object)
+    print(f'Total records retrieved from salaries table: {len(df)}')
+    # Df to list of dictionaries
+    data_list = df.to_dict(orient='records')
+    # Create empty lists to add data
+    job_titles = []
+    countries = []
+    expertise_levels = []
+    # Loop through query results and put data values into a list
+    for row in data_list:
+        row_dict = {}
+        for column in columns:
+            row_dict[column] = row[column]
+        job_titles.append(row_dict['Job Title'])
+        countries.append(row_dict['Company Location'])
+        expertise_levels.append(row_dict['Expertise Level'])
+    countries = list(set(countries))
+    job_titles = list(set(job_titles))
+    expertise_levels = list(set(expertise_levels))
+    result_dictionary = {
+        'Company Location': countries,
+        'Job Title': job_titles,
+        'Expertise Level': expertise_levels,
+        'Data': data_list
+    }
+    return result_dictionary
+
+# function to return top 10 mean salaries given a query, conn and grouping column
+def dict_from_query_top10(query_string, conn_object, group_by_column):
+    # Read query directly into pandas df
+    df = pd.read_sql(query_string, conn_object)
+    print(f'Total records retrieved from salaries table: {len(df)}')
+    print(f'Grouping by column: {group_by_column}')
+
+    df = (df
+        .groupby(group_by_column)
+        .agg(
+            mean_salary = (salary_column, 'mean'),
+            max_salary = (salary_column, 'max'),
+            min_salary = (salary_column, 'min'),
+            median_salary = (salary_column, lambda x: np.median(x))
+        )
+    )
+    print(df)
+    data_list = df.to_dict(orient='dict')
+    return data_list
 
 #################################################
 # Database Setup
@@ -85,70 +151,35 @@ def salaries():
     print("Server received request for 'salaries' page...")
     # Query to find salaries data
     query = text(f'SELECT * FROM "salaries"')
-    # data = engine.execute(query).all()
-    data = conn.execute(query).all()
-    print(f'Total records retrieved from salaries table: {len(data)}')
-    # Create empty lists to add data
-    data_list = []
-    job_titles = []
-    countries = []
-    expertise_levels = []
-    # Loop through query results and put data values into a list
-    for row in data:
-        row_dict = {}
-        for idx, column in enumerate(columns):
-            row_dict[column] = row[idx]
-        job_titles.append(row_dict['Job Title'])
-        countries.append(row_dict['Company Location'])
-        expertise_levels.append(row_dict['Expertise Level'])
-        data_list.append(row_dict)
-    countries = list(set(countries))
-    job_titles = list(set(job_titles))
-    expertise_levels = list(set(expertise_levels))
-    result = {
-        'Company Location': countries,
-        'Job Title': job_titles,
-        'Expertise Level': expertise_levels,
-        'Data': data_list
-    }
-
+    result = dict_from_query(query, conn)
     return jsonify(result)
 
-# Define what to do when a user hits the /api/v1.0/salaries/<column_name>/<value> route
+# Define what to do when a user hits the /api/v1.0/<column_name>/<value> route
 @app.route("/api/v1.0/<column_name>/<value>")
-def salaries_by_country(column_name, value):
+def salaries_filter(column_name, value):
     print(f"Server received request for data page filtered by {column_name}: {value}...")
     # Query to find salaries data
     query = text(f'SELECT * FROM "salaries" WHERE "{column_name}" = ' + f"'{value}'")
-    # data = engine.execute(query).all()
-    data = conn.execute(query).all()
-    print(f'Total records retrieved from salaries table: {len(data)}')
-    # Create empty lists to add data
-    data_list = []
-    job_titles = []
-    countries = []
-    expertise_levels = []
-    # Loop through query results and put data values into a list
-    for row in data:
-        row_dict = {}
-        for idx, column in enumerate(columns):
-            row_dict[column] = row[idx]
-        job_titles.append(row_dict['Job Title'])
-        countries.append(row_dict['Company Location'])
-        expertise_levels.append(row_dict['Expertise Level'])
-        data_list.append(row_dict)
-    countries = list(set(countries))
-    job_titles = list(set(job_titles))
-    expertise_levels = list(set(expertise_levels))
-    result = {
-        'Company Location': countries,
-        'Job Title': job_titles,
-        'Expertise Level': expertise_levels,
-        'Data': data_list
-    }
-
+    result = dict_from_query(query, conn)
     return jsonify(result)
 
+# 3) country filter -> mean of salary by job title -> return top 10 values and job titles
+
+# Define what to do when a user hits the /api/v1.0/top10_titles_by_country/<country_name> route
+@app.route("/api/v1.0/top10_titles_by_country/<country_name>")
+def salaries_by_country(country_name):
+    print(f"Server received request for top 10 payed job titles in {country_name}...")
+    # Query to find salaries data
+    query = f'SELECT * FROM "salaries" WHERE "{country_column}" = ' + f"'{country_name}'"
+    result = dict_from_query_top10(query, conn, 'Job Title')
+    return jsonify(result)
+
+
+
+
+# 4) job title filter -> mean salary by country -> return top 10 values and countries
+# 5) job title filter -> mean salary by expertise -> % change
+# 6) mean salary by job title and expertise grouping -> return together with individual data points
 
 if __name__ == "__main__":
     app.run(debug=True)
