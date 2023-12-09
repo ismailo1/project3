@@ -2,9 +2,6 @@
 
 Project 3 - Group 1 by Ismail Omer, Yargi Kilinc, Archit Hallan, Tania Barrera
 
-![image](https://github.com/ismailo1/project3/assets/142269763/7ae837cc-0079-46d0-b2c2-3b700ef0ac19)
-
-
 We are delighted to present Project 3, a comprehensive exploration tailored for employers, job seekers in the data realm, individuals contemplating joining a bootcamp, and esteemed global HR companies.
 
 This endeavor addresses pertinent questions within the domain:
