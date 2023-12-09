@@ -33,6 +33,9 @@ Our sophisticated visuals provide profound insights:
 5.	a bar chart that displays Top10 highest paying countries for that experience level (TANIA - PLS CREATE AN API ROUTE),
 6.	an interactive bubble map that displays the salaries for the experience level selected for all countries (TANIA - PLS CREATE AN API ROUTE).
 
+![image](https://github.com/ismailo1/project3/assets/142269763/c0015b2a-1c6d-4eb8-948e-b20085f859a7)
+
+
 This initiative serves as your compass for well-informed decisions in hiring, job seeking, bootcamp considerations, and global HR strategies.
 
 ![image](https://github.com/ismailo1/project3/assets/142269763/f32a5946-e8c9-4451-aab3-e94490ec2b0d)
