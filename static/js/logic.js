@@ -111,6 +111,14 @@ function horizontalbarchart(salariesArray, passedcountry) {
 // Move the horizontalbarchart function outside of the handleCountryChange function
 function handleCountryChange(passedcountry) {
 
+    top10salaries(passedcountry);
+    JobTitlesAndCount(passedcountry);
+    
+  
+}
+
+
+function top10salaries(passedcountry) {
     d3.json(url).then(function(data) {
         console.log(data);
         // filter data for the country selected
@@ -129,8 +137,6 @@ function handleCountryChange(passedcountry) {
         }
     });
 }
-
-
 
 
 
@@ -190,46 +196,105 @@ function getColor(salary) {
 
 
 // Creating a function for an interactive Map that evolves with country selection, offering understanding of job title density and count globally
-function createMap() {
-   
 
+
+//get jobs titles and count
+function JobTitlesAndCount(passedcountry) {
+    const jobTitlesURL = `http://127.0.0.1:5000/api/v1.0/country/${passedcountry}/job_title_counts`
+
+    d3.json(jobTitlesURL).then(function(data) {
+        console.log(data);
+
+        let count = 0;
+        for (let key in data) {
+            if (data.hasOwnProperty(key)) {
+
+                   count+= data[key].count
+            
+                }
+            }
+        createMap(count, passedcountry);
+    }
+
+    )
+
+}
+
+let myMap;
+function createMap(count, passedcountry) {
     // Adding a tile layer (the background map image) to our map
     let streetmap = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: `&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors`
     });
 
-    let darkmap = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: `Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.`
-    });
-
     // defining a basemaps object to hold our base layers
     let baseMaps = {
-        "Street Map": streetmap,
-        "Dark Map": darkmap
+        "Street Map": streetmap
     };
 
 
-        
-    // creating overlay object TO HOld dummy data
-    let overlayMaps = {
-        "Job Titles":   
-    };
-    
-    // creating our map, giving it the streetmap and jobtitledensity layers to display on load
-    let myMap = L.map("country-map", {
-        center: [37.09, -95.71],
-        zoom: 2,
-        layers: [streetmap, ]
-    });
-    
-            
-    // creating a layer control
-    // passing in our baseMaps and overlayMaps
-    // adding the layer control to the map
-    L.control.layers(baseMaps, overlayMaps, {
-        collapsed: false
-    }).addTo(myMap);
+    // Creating our map, giving it the streetmap and jobTitleMarkers layers to display on load
+
+    if (myMap) {
+        myMap.remove();
+    }
+
+createMapUI(passedcountry, streetmap, baseMaps,count);
+
+
 };
+
+
+function createMapUI(countryName, streetmap, baseMaps, count) {
+    
+    const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(countryName)}`;
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.length > 0) {
+                const { lat, lon } = data[0]; // Extract latitude and 
+
+                const center = [lat, lon];
+            
+                
+                    // Creating a layer group to hold markers for job titles
+                    let jobTitleMarkers = L.layerGroup();
+
+                    
+                        const marker = L.marker(center)
+                            .bindPopup(`Total Jobs in ${countryName}: ${count}`)
+                            .addTo(jobTitleMarkers);
+                
+
+
+
+                    // Adding jobTitleMarkers to the overlayMaps
+                    let overlayMaps = {
+                        "Job Titles": jobTitleMarkers
+                    };
+
+               
+                myMap = L.map("country-map", {
+                    center: center,
+                    zoom: 2,
+                    layers: [streetmap, jobTitleMarkers]
+                });
+
+                // Creating a layer control
+                // Passing in our baseMaps and overlayMaps
+                // Adding the layer control to the map
+                L.control.layers(baseMaps, overlayMaps, {
+                    collapsed: false
+                }).addTo(myMap);
+
+            } else {
+                console.error('Country coordinates not found');
+            }
+        })
+        .catch(error => console.error('Error fetching country coordinates:', error));
+}
+
 
 // console.log(map);
 

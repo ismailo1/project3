@@ -1,6 +1,7 @@
 body {
   padding: 0;
   margin: 0;
+  background-color: beige;
 }
 
 #map,
@@ -32,7 +33,7 @@ html {
  
 }
 .dropdown-container{
-
+  background-color: beige;
 
   padding: 0;
   margin: 0;
@@ -71,6 +72,9 @@ select{
 
 .charts-container{
   display: flex;
+
+  
+
   flex-direction: row;
   gap:20px;
   padding: 0 15px;
@@ -86,7 +90,19 @@ select{
   border: 1px solid #ddd;
   padding: 10px 15px;
   border-radius: 5px;
+
+
   outline: none;
   cursor: pointer;
-  background-color: #fff;
+
+}
+
+.charts-container .chart #country-bar{
+  background-color: rgb(255, 255, 241);
+  margin-bottom: 15px;
+}
+
+.charts-container .chart #country-map{
+  background-color: rgb(255, 255, 241);
+  margin: 5px;
 }
