@@ -36,7 +36,7 @@ Our sophisticated visuals provide profound insights:
 
 **By Selecting JOB TITLE from Dropdown2**
 
-3.	a bar chart that displays the top 10 highest paying countries
+3.	a line graph that displays the top 10 highest paying countries
 
 > **API route:** `/api/v1.0/job_title/<job_title>/top10_countries`
 
@@ -46,7 +46,7 @@ Our sophisticated visuals provide profound insights:
 
 **By Selecting EXPERIENCE LEVEL from Dropdown3**
 
-5.	a bar chart that displays Top10 highest paying countries for that experience level 
+5.	a line chart that displays Top10 highest paying countries for that experience level 
 
 > **API route:** `/api/v1.0/experience_level/<experience_level_name>/top10_countries`
 
