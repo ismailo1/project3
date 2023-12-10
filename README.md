@@ -70,6 +70,8 @@ You will need to have installed the following python packages:
 
 ### API routes
 
+#### To access the whole dataset
+
 Our API has a static route that returns all the individual data points, along with the distinct values present in the dataset for the `Company Location`, `Job Title`, `Expertise Level` columns.
 
 To access this route, follow this relative route after stating your local server: `/api/v1.0/salaries`
@@ -82,7 +84,7 @@ The returned data is in json format and follows this structure:
     "Company Location": [
         "Canada",
         "Germany",
-        "India"
+        ...
     ],
     "Data": [{
             "Company Location": "Canada",
@@ -102,24 +104,17 @@ The returned data is in json format and follows this structure:
             "Salary in USD": 35000,
             "Year": 2023
         },
-        {
-            "Company Location": "India",
-            "Company Size": "Large",
-            "Employment Type": "Full-Time",
-            "Expertise Level": "Expert",
-            "Job Title": "Data Science Manager",
-            "Salary in USD": 94665,
-            "Year": 2021
-        }
+        ...
     ],
     "Expertise Level": [
         "Expert",
-        "Junior"
+        "Junior",
+        ...
     ],
     "Job Title": [
         "Staff Data Analyst",
         "AI Engineer",
-        "Data Science Manager"
+        ...
     ]
 }
 
