@@ -291,4 +291,24 @@ function createMapUI(countryName, streetmap, baseMaps, count) {
 console.log("logic.js loaded");
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// VIEW2
+
+// By Selecting JOB TITLE from Dropdown2
+// a bar chart that displays the top 10 highest paying countries
+// API route: /api/v1.0/job_title/<job_title>/top10_countries
+
+// an interactive bubble map that displays the top 10 highest paying countries,
+// API route if you want all countries instead of only top10: /api/v1.0/job_title/<job_title>/all_countries
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// VIEW3
+
+//By Selecting EXPERIENCE LEVEL from Dropdown3
+
+// a bar chart that displays Top10 highest paying countries for that experience level
+// API route: /api/v1.0/experience_level/<experience_level_name>/top10_countries
+
+// an interactive bubble map that displays the salaries for the experience level selected for all countries
+// API route: /api/v1.0/experience_level/<experience_level_name>/all_countries
 
