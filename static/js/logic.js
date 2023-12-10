@@ -106,8 +106,6 @@ function horizontalbarchart(salariesArray, passedcountry) {
     
 }
 
-
-
 // Move the horizontalbarchart function outside of the handleCountryChange function
 function handleCountryChange(passedcountry) {
 
@@ -116,7 +114,6 @@ function handleCountryChange(passedcountry) {
     
   
 }
-
 
 function top10salaries(passedcountry) {
     d3.json(url).then(function(data) {
@@ -137,9 +134,6 @@ function top10salaries(passedcountry) {
         }
     });
 }
-
-
-
 
 //function to create features to be used in the interactive map
 function createFeatures(datascienceData) {
@@ -193,10 +187,7 @@ function getColor(salary) {
     }
 }
 
-
-
 // Creating a function for an interactive Map that evolves with country selection, offering understanding of job title density and count globally
-
 
 //get jobs titles and count
 function JobTitlesAndCount(passedcountry) {
@@ -295,213 +286,9 @@ function createMapUI(countryName, streetmap, baseMaps, count) {
         .catch(error => console.error('Error fetching country coordinates:', error));
 }
 
-
 // console.log(map);
 
 console.log("logic.js loaded");
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-/*
-// creating an init function to display dropdown menu with list of job titles, receiving all job titles from data file, and calling functions when job title is changed
-function init2() {
-    // getting each job title and appending to dropdown menu
-    d3.json(url).then(function(data) {
-        // console.log(data);
-        // creating dropdown menu with list of Job Title
-        let dropdown = d3.select("#selDataset");
-        // receiving all job titles from Job Title in data file
-        let jobtitles = data["Job Title"];
-        // getting each job title and appending to dropdown menu
-        jobtitles.forEach(function(jobtitle) {
-            dropdown.append("option").text(jobtitle).property("value", jobtitle);           
-        });
-        // calling functions when job title is changed selected
-        secondviewvalues(jobtitles[0]);
-        console.log(jobtitles[0]);
-    }
-    )};
-    // creating an optionChanged function when job title is changed by user and calling functions when job title is changed
-    function optionChanged(passedjobtitle) {
-        secondviewvalues(passedjobtitle);
-    };  
-
-init2();
-
-// creating a function to be used to display vertical bar chart and line graph
-function secondviewvalues(passedjobtitle) {
-    // fetch json data using d3 and console log
-    d3.json(url).then(function(data) {
-        console.log(data);
-        // get job title data
-        let jobtitles = data["Job Title"];
-        console.log(jobtitles);
-        // filter data for the job title selected
-        let filteredjobtitle = jobtitles.filter(jobtitle => jobtitle === passedjobtitle);
-        // get data for bar chart
-        let filteredjobtitledata = filteredjobtitle[0].filteredjobtitledata;
-        console.log(filteredjobtitledata);
-            
-        // calling function to display vertical bar chart
-        verticalbarchart(filteredjobtitledata);
-        // calling function to display line graph
-        linegraph(filteredjobtitledata);
-    });
-};
-
-
-        
-// Creating a function for a Bar Chart that dynamically updates upon selecting a job title, unveiling the top 10 highest-paying countries in ascending order
-function verticalbarchart(filteredjobtitledata) {
-    console.log(filteredjobtitledata);
-        
-    // Counting the total number of each country
-    let countryCount = {};
-    filteredjobtitledata["Company Location"].forEach(function(country) {
-        countryCount[country] = (countryCount[country] || 0) + 1;
-    });
-        
-    // Creating the bar chart
-    let tracebarchart = {
-        x: Object.values(countryCount),
-        y: Object.keys(countryCount),
-        type: "bar",
-        orientation: "h"
-    };
-    let databarchart = [tracebarchart];
-    let layoutbarchart = {
-        title: "Top 10 Highest-Paying Countries for " + filteredjobtitledata["Job Title"],
-        xaxis: {title: "Salary (USD)"},
-        yaxis: {title: "Country"}
-    };
-    Plotly.newPlot("bar", databarchart, layoutbarchart);
-};
-
-// Creating a function for a Line Graph that updates upon selecting a job title, unveiling the increase of salary level in percentage
-function linegraph(filteredjobtitledata) {
-    console.log(filteredjobtitledata);
-        
-    // Creating the line graph
-    let tracelinegraph = {
-        x: filteredjobtitledata["Years of Experience"],
-        y: filteredjobtitledata["Salary"],
-        type: "line"
-    };
-    let datalinegraph = [tracelinegraph];
-    let layoutlinegraph = {
-        title: "Salary Level for " + filteredjobtitledata["Job Title"],
-        xaxis: {title: "Years of Experience"},
-        yaxis: {title: "Salary (USD)"}
-    };
-    Plotly.newPlot("line", datalinegraph, layoutlinegraph);
-}
-
-
-*/
-
-console.log(asmndbasf);
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-// creating an init function to display dropdown menu with list of expertise levels receiving all expertise levels from data file
-/*
-function init3() {
-    // getting each job title and appending to dropdown menu
-    d3.json(url).then(function(data) {
-        // console.log(data);
-        // creating dropdown menu with list of Expertise Level
-        let dropdown = d3.select("#selDataset");
-        // receiving all expertise levels from Expertise Level in data file
-        let expertises = data["Expertise Level"];
-        // getting each expertise level and appending to dropdown menu
-        expertises.forEach(function(expertise) {
-            dropdown.append("option").text(expertise).property("value", expertise);
-        });
-    });
-
-        // calling function when first expertise level is selected
-        thirdchartvalues(expertises[0]);
-        console.log(expertises[0]);       
-};
-
-// creating an optionChanged function when expertise level is changed by user and calling functions when expertise level is changed
-function optionChanged(passedexpertise) {
-    thirdchartvalues(passedexpertise);
-};
-
-init3();
-
-// creating a function to be used to display line chart featuring salary against job title with individual salary dots that updates upon selecting an expertise level and another line chart that shows the correlation between experience level and salary
-function thirdchartvalues(passedexpertise) {
-    // fetch json data using d3 and console log
-    d3.json(url).then(function(data) {
-        console.log(data);
-        // filter data for the expertise level selected
-        let filteredexpertisedata = data.Data.filter(function(entry) {
-            return entry["Expertise Level"] === passedexpertise;
-        });
-        // get data for line chart
-        let filteredexpertisedata2 = filteredexpertisedata[0].filteredexpertisedata;
-        console.log(filteredexpertisedata2);
-        // calling function to display line chart
-        linechart(filteredexpertisedata2);
-    });
-}
-    
-// Creating a function for a Line Chart featuring salary against job title with individual salary dots that updates upon selecting an expertise level
-function linechart(filteredexpertisedata2) {
-    console.log(filteredexpertisedata2);
-        
-    // Creating the line chart
-    let tracelinechart = {
-        x: filteredexpertisedata2["Job Title"],
-        y: filteredexpertisedata2["Salary"],
-        mode: "markers+lines"
-    };
-    let datalinechart = [tracelinechart];
-    let layoutlinechart = {
-        title: "Salary for " + filteredexpertisedata2["Expertise Level"],
-        xaxis: {title: "Job Title"},
-        yaxis: {title: "Salary (USD)"}
-    };
-    Plotly.newPlot("line", datalinechart, layoutlinechart);
-}
-
-
-// Creating a line chart that shows the correlation between experience level and salary
-function linechart2(filteredexpertisedata2) {
-    console.log(filteredexpertisedata2);
-        
-    // Creating the line chart
-    let tracelinechart2 = {
-        x: filteredexpertisedata2["Years of Experience"],
-        y: filteredexpertisedata2["Salary"],
-        mode: "markers+lines"
-    };
-    let datalinechart2 = [tracelinechart2];
-    let layoutlinechart2 = {
-        title: "Salary for " + filteredexpertisedata2["Expertise Level"],
-        xaxis: {title: "Years of Experience"},
-        yaxis: {title: "Salary (USD)"}
-    };
-    Plotly.newPlot("line", datalinechart2, layoutlinechart2);
-}
-
-// console log linechart here
-console.log(linechart);
-// console log linechart2 here
-console.log(linechart2);
-// console log filteredexpertisedata2 here
-console.log(filteredexpertisedata2);
-// console log passedexpertise here
-console.log(passedexpertise);
-// console log filteredexpertisedata here
-console.log(filteredexpertisedata);
-// console log expertise here
-console.log(expertise);
-
-
-// console log init here
-// console.log("init");
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-*/
