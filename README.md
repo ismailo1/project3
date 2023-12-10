@@ -14,7 +14,9 @@ Our sophisticated visuals provide profound insights:
 > 
 > **API route if you want all job titles instead of only top10:** `/api/v1.0/country/<country_name>/all_job_titles`
 
-2.	an interactive Map displaying total number of all job titles with a popup marker (TANIA - PLS CREATE AN API ROUTE),
+2.	an interactive Map displaying total number of all job titles with a popup marker
+
+> **API route:** `/api/v1.0/country/<country_name>/job_titles_summary`
 
 **By Selecting JOB TITLE from Dropdown2**
 

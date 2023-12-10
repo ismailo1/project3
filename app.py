@@ -55,7 +55,20 @@ def dict_from_query(query_string, conn_object):
     }
     return result_dictionary
 
-# function to return top 10 mean salaries given a query, conn and grouping column
+# function to return result dictionary, given a query string that counts and a connection object
+def dict_from_summary_query(query_string, conn_object):
+    # Instead of using:
+    # data = conn.execute(text(query)).all()
+    # Read query directly into pandas df
+    df = pd.read_sql(query_string, conn_object)
+    print(f'Total groups counted from salaries table: {len(df)}')
+    # Df to list of dictionaries
+    data_list = df.set_index(title_column).to_dict(orient='index')
+    return data_list
+
+
+# function to return summary of salaries given a query, conn and grouping column, 
+# top10 argument defines if return only top10 desc or all data (defaults to True)
 def agg_dict_from_query(query_string, conn_object, group_by_column, top10=True):
     # Read query directly into pandas df
     df = pd.read_sql(query_string, conn_object)
@@ -193,7 +206,7 @@ def salaries_by_country_top10_titles(country_name):
 # Define what to do when a user hits the /api/v1.0/country/<country_name>/all_job_titles route
 @app.route("/api/v1.0/country/<country_name>/all_job_titles")
 def salaries_by_country_all_titles(country_name):
-    print(f"Server received requestrequest for summary of salary by job title in {country_name}...")
+    print(f"Server received request for summary of salary by job title in {country_name}...")
     # Query to find salaries data
     query = f'SELECT * FROM "salaries" WHERE "{country_column}" = ' + f"'{country_name}'"
     result = agg_dict_from_query(query, conn, title_column, False)
@@ -210,7 +223,7 @@ def salaries_by_title_top10_countries(job_title_name):
     return jsonify(result)
 
 # Define what to do when a user hits the /api/v1.0/job_title/<job_title>/all_countries route
-@app.route("/api/v1.0/job_title/<job_title>/all_countries")
+@app.route("/api/v1.0/job_title/<job_title_name>/all_countries")
 def salaries_by_title_all_countries(job_title_name):
     print(f"Server received request for summary of salary by country for job title: {job_title_name}...")
     # Query to find salaries data
@@ -219,7 +232,7 @@ def salaries_by_title_all_countries(job_title_name):
     return jsonify(result)
 
 # Define what to do when a user hits the /api/v1.0/job_title/<job_title>/experience_levels route
-@app.route("/api/v1.0/job_title/<job_title>/experience_levels")
+@app.route("/api/v1.0/job_title/<job_title_name>/experience_levels")
 def salaries_by_title_experience_levels(job_title_name):
     print(f"Server received request for salary summary by experience level for job title: {job_title_name}...")
     # Query to find salaries data
@@ -243,6 +256,21 @@ def salaries_by_experience_all_countries(experience_level_name):
     # Query to find salaries data
     query = f'SELECT * FROM "salaries" WHERE "{experience_column}" = ' + f"'{experience_level_name}'"
     result = agg_dict_from_query(query, conn, country_column, False)
+    return jsonify(result)
+
+# Define what to do when a user hits the /api/v1.0/country/<country_name>/job_titles_summary route
+@app.route("/api/v1.0/country/<country_name>/job_titles_summary")
+def summary_job_titles_by_country(country_name):
+    print(f"Server received request for summary of job titles in {country_name}...")
+    # Query to find salaries data
+    query = f'SELECT "{title_column}", '+\
+        f'AVG("{salary_column}") AS mean_salary, '+\
+        f'MAX("{salary_column}") AS max_salary, '+\
+        f'MIN("{salary_column}") AS min_salary, '+\
+        f'COUNT(*) '+f'FROM "salaries" '+\
+        f'WHERE "{country_column}" = ' + f"'{country_name}' " +\
+        f'GROUP BY "{title_column}"'
+    result = dict_from_summary_query(query, conn)
     return jsonify(result)
 
 
