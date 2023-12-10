@@ -14,7 +14,8 @@ NOTES by Yargi:
 - New API routes used and added as const url`s
 - lat-long coming from selected country
 - Popup opening on interactive map1 that displays total number of jobs only for the selected country
-- init2 and init3 commented-out (erased), needs new pseadue code and functions)
+- init2 and init3 commented-out (erased),
+- new pseudo code added for view2 and view3
 
 ![Dashboard View1](https://github.com/ismailo1/project3/assets/142269763/a23de68a-96a0-4e77-8e6e-85caedf240bb)
 
