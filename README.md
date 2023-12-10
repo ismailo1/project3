@@ -4,6 +4,21 @@ Project 3 - Group 1 by Ismail Omer, Yargi Kilinc, Archit Hallan, Tania Barrera
 
 We are delighted to present Project 3, a comprehensive exploration tailored for employers, job seekers in the data realm, individuals contemplating joining a bootcamp, and esteemed global HR companies.
 
+NOTES by Yargi:
+
+- New library jsdelivr.com was used
+- HTML file revised
+- Style.css revised
+- Countries sorted in alphabetical order for Dropdown1
+- Body color, head color, bar chart color&style revised in style.css
+- New API routes used and added as const url`s
+- lat-long coming from selected country
+- Popup opening on interactive map1 that displays total number of jobs only for the selected country
+- init2 and init3 commented-out (erased), needs new pseadue code and functions)
+
+![Dashboard View1](https://github.com/ismailo1/project3/assets/142269763/a23de68a-96a0-4e77-8e6e-85caedf240bb)
+
+
 Our sophisticated visuals provide profound insights:
 
 **By Selecting COUNTRY from Dropdown1**
