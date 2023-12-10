@@ -8,18 +8,33 @@ Our sophisticated visuals provide profound insights:
 
 **By Selecting COUNTRY from Dropdown1**
 
-1.	a horizontal bar chart that displays the top 10 highest-paying job titles in ascending order (TANIA - PLS CREATE AN API ROUTE),
+1.	a horizontal bar chart that displays the top 10 highest-paying job titles 
+
+> **API route:** `/api/v1.0/country/<country_name>/top10_job_titles`
+> 
+> **API route if you want all job titles instead of only top10:** `/api/v1.0/country/<country_name>/all_job_titles`
+
 2.	an interactive Map displaying total number of all job titles with a popup marker (TANIA - PLS CREATE AN API ROUTE),
 
 **By Selecting JOB TITLE from Dropdown2**
 
-3.	a bar chart that displays the top 10 highest paying countries in ascending order (TANIA - PLS CREATE AN API ROUTE),
+3.	a bar chart that displays the top 10 highest paying countries
+
+> **API route:** `/api/v1.0/job_title/<job_title>/top10_countries`
+
 4.	an interactive bubble map that displays the top 10 highest paying countries,
+
+> **API route if you want all countries instead of only top10:** `/api/v1.0/job_title/<job_title>/all_countries`
 
 **By Selecting EXPERIENCE LEVEL from Dropdown3**
 
-5.	a bar chart that displays Top10 highest paying countries for that experience level (TANIA - PLS CREATE AN API ROUTE),
-6.	an interactive bubble map that displays the salaries for the experience level selected for all countries (TANIA - PLS CREATE AN API ROUTE).
+5.	a bar chart that displays Top10 highest paying countries for that experience level 
+
+> **API route:** `/api/v1.0/experience_level/<experience_level_name>/top10_countries`
+
+6.	an interactive bubble map that displays the salaries for the experience level selected for all countries 
+
+> **API route:** `/api/v1.0/experience_level/<experience_level_name>/all_countries`
 
 ![image](https://github.com/ismailo1/project3/assets/142269763/c0015b2a-1c6d-4eb8-948e-b20085f859a7)
 

@@ -17,7 +17,7 @@ from sqlalchemy_utils import database_exists, create_database
 # Column names
 title_column = 'Job Title'
 employment_type_column = 'Employment Type'
-expertise_column = 'Expertise Level'
+experience_column = 'Expertise Level'
 country_column = 'Company Location'
 salary_column = 'Salary in USD'
 size_column = 'Company Size'
@@ -35,22 +35,22 @@ def dict_from_query(query_string, conn_object):
     # Create empty lists to add data
     job_titles = []
     countries = []
-    expertise_levels = []
+    experience_levels = []
     # Loop through query results and put data values into a list
     for row in data_list:
         row_dict = {}
         for column in columns:
             row_dict[column] = row[column]
-        job_titles.append(row_dict['Job Title'])
-        countries.append(row_dict['Company Location'])
-        expertise_levels.append(row_dict['Expertise Level'])
+        job_titles.append(row_dict[title_column])
+        countries.append(row_dict[country_column])
+        experience_levels.append(row_dict[experience_column])
     countries = list(set(countries))
     job_titles = list(set(job_titles))
-    expertise_levels = list(set(expertise_levels))
+    experience_levels = list(set(experience_levels))
     result_dictionary = {
-        'Company Location': countries,
-        'Job Title': job_titles,
-        'Expertise Level': expertise_levels,
+        country_column: countries,
+        title_column: job_titles,
+        experience_column: experience_levels,
         'Data': data_list
     }
     return result_dictionary
@@ -65,30 +65,32 @@ def agg_dict_from_query(query_string, conn_object, group_by_column, top10=True):
     df = (df
         .groupby(group_by_column)
         .agg(
-            by_mean_salary = (salary_column, 'mean'),
-            by_max_salary = (salary_column, 'max'),
-            by_min_salary = (salary_column, 'min'),
-            by_median_salary = (salary_column, lambda x: np.median(x))
+            mean_salary = (salary_column, 'mean'),
+            max_salary = (salary_column, 'max'),
+            min_salary = (salary_column, 'min'),
+            median_salary = (salary_column, lambda x: np.median(x))
         )
     )
-    result = {}
+    result_dictionary = {}
     for col_name in df:
-        col_top10 = (df[col_name]
+        col_ordered = (df[col_name]
             .rename('salary')
             .sort_values(ascending=False)
-            .head(10)
             .reset_index(drop=False)
         )
-        col_top10.index += 1 
+        # Whether to get top10 only
+        if top10:
+            col_ordered = col_ordered.head(10)
+        col_ordered.index += 1 
         # organize result in dictionary of dictionaries
-        result[col_name] = col_top10.to_dict(orient='index')
-        for record in result[col_name]:
-            record_data = result[col_name][record]
-            result[col_name][record] = [
+        result_dictionary[col_name] = col_ordered.to_dict(orient='index')
+        for record in result_dictionary[col_name]:
+            record_data = result_dictionary[col_name][record]
+            result_dictionary[col_name][record] = [
                 record_data[group_by_column],
                 record_data['salary']
             ]
-    return result
+    return result_dictionary
 
 #################################################
 # Database Setup
@@ -153,17 +155,13 @@ def api_routes():
     </ul>
     <p>Available dynamic route:</p>
     <ul>
-        <li><strong>/api/v1.0/&lt;column_name&gt;/&lt;value&gt;</strong>: returns data filtered using the specified column/value pair. (e.g. <i>/api/v1.0/Company Location/Canada</i> will return all positions where the company is located in Canada)</li>
+        <li><strong>/api/v1.0/filter/&lt;column_name&gt;/&lt;value&gt;</strong>: returns data filtered using the specified column/value pair. (e.g. <i>/api/v1.0/Company Location/Canada</i> will return all positions where the company is located in Canada)</li>
         <li><strong>/api/v1.0/country/&lt;country_name&gt;/top10_job_titles</strong>: returns data filtered by the indicated country_name, from the Company Location column. It returns the top 10 job titles by several different summary statistics of the salary in USD (e.g. <i>/api/v1.0/country/Canada/top10_job_titles</i> will return the top 10 job titles by salary where the company is based in Canada, as a list of dictionaries, one dictionary for each summary statistic: mean, max, min and median)</li>
         <li><strong>/api/v1.0/top10_countries_by_title/&lt;title_name&gt;</strong>: returns data filtered by the indicated title_name. It returns the top 10 countries by several different summary statistics of the salary in USD (e.g. <i>/api/v1.0/top10_countries_by_title/Data Analyst</i> will return the top 10 countries based on salary of the Data Analyst job title, as a list of dictionaries, one dictionary for each summary statistic: mean, max, min and median)</li>
-        <li><strong>/api/v1.0/job_title/&lt;title_name&gt;/expertise_levels</strong>: returns data filtered by the indicated title_name and the several different summary statistics of the salary in USD for each experitise level (e.g. <i>/api/v1.0/job_title/Data Analyst/expertise_levels</i> will return the summary statisting for the salary of different expertise levels for the Data Analyst job title, as a list of dictionaries, one dictionary for each summary statistic: mean, max, min and median)</li>
+        <li><strong>/api/v1.0/job_title/&lt;title_name&gt;/experience_levels</strong>: returns data filtered by the indicated title_name and the several different summary statistics of the salary in USD for each experitise level (e.g. <i>/api/v1.0/job_title/Data Analyst/experience_levels</i> will return the summary statisting for the salary of different experience levels for the Data Analyst job title, as a list of dictionaries, one dictionary for each summary statistic: mean, max, min and median)</li>
     </ul>
 
     '''
-
-# Define a new route that will display the Top 10 highest paying salaries for selected country, use window functions
-# @app.route("/top10salaries")
-
 
 # Define what to do when a user hits the /api/v1.0/salaries route
 @app.route("/api/v1.0/salaries")
@@ -174,8 +172,8 @@ def salaries():
     result = dict_from_query(query, conn)
     return jsonify(result)
 
-# Define what to do when a user hits the /api/v1.0/<column_name>/<value> route
-@app.route("/api/v1.0/<column_name>/<value>")
+# Define what to do when a user hits the /api/v1.0/filter/<column_name>/<value> route
+@app.route("/api/v1.0/filter/<column_name>/<value>")
 def salaries_filter(column_name, value):
     print(f"Server received request for data page filtered by {column_name}: {value}...")
     # Query to find salaries data
@@ -192,6 +190,15 @@ def salaries_by_country_top10_titles(country_name):
     result = agg_dict_from_query(query, conn, title_column)
     return jsonify(result)
 
+# Define what to do when a user hits the /api/v1.0/country/<country_name>/all_job_titles route
+@app.route("/api/v1.0/country/<country_name>/all_job_titles")
+def salaries_by_country_all_titles(country_name):
+    print(f"Server received requestrequest for summary of salary by job title in {country_name}...")
+    # Query to find salaries data
+    query = f'SELECT * FROM "salaries" WHERE "{country_column}" = ' + f"'{country_name}'"
+    result = agg_dict_from_query(query, conn, title_column, False)
+    return jsonify(result)
+
 
 # Define what to do when a user hits the /api/v1.0/job_title/<job_title>/top10_countries route
 @app.route("/api/v1.0/job_title/<job_title>/top10_countries")
@@ -202,18 +209,41 @@ def salaries_by_title_top10_countries(job_title_name):
     result = agg_dict_from_query(query, conn, country_column)
     return jsonify(result)
 
-# Define what to do when a user hits the /api/v1.0/change_with_experience_by_title/<title_name> route
-@app.route("/api/v1.0/job_title/<job_title>/expertise_levels")
-def salaries_by_title_expertise_levels(job_title_name):
-    print(f"Server received request for salary summary by expertise level for job title: {job_title_name}...")
+# Define what to do when a user hits the /api/v1.0/job_title/<job_title>/all_countries route
+@app.route("/api/v1.0/job_title/<job_title>/all_countries")
+def salaries_by_title_all_countries(job_title_name):
+    print(f"Server received request for summary of salary by country for job title: {job_title_name}...")
     # Query to find salaries data
     query = f'SELECT * FROM "salaries" WHERE "{title_column}" = ' + f"'{job_title_name}'"
-    result = agg_dict_from_query(query, conn, expertise_column, False)
+    result = agg_dict_from_query(query, conn, country_column, False)
     return jsonify(result)
 
-# 6) mean salary by job title and expertise grouping -> return together with individual data points
+# Define what to do when a user hits the /api/v1.0/job_title/<job_title>/experience_levels route
+@app.route("/api/v1.0/job_title/<job_title>/experience_levels")
+def salaries_by_title_experience_levels(job_title_name):
+    print(f"Server received request for salary summary by experience level for job title: {job_title_name}...")
+    # Query to find salaries data
+    query = f'SELECT * FROM "salaries" WHERE "{title_column}" = ' + f"'{job_title_name}'"
+    result = agg_dict_from_query(query, conn, experience_column, False)
+    return jsonify(result)
 
+# Define what to do when a user hits the /api/v1.0/experience_level/<experience_level_name>/top10_countries route
+@app.route("/api/v1.0/experience_level/<experience_level_name>/top10_countries")
+def salaries_by_experience_top10_countries(experience_level_name):
+    print(f"Server received request for top 10 payed countries for experience level: {experience_level_name}...")
+    # Query to find salaries data
+    query = f'SELECT * FROM "salaries" WHERE "{experience_column}" = ' + f"'{experience_level_name}'"
+    result = agg_dict_from_query(query, conn, country_column)
+    return jsonify(result)
 
+# Define what to do when a user hits the /api/v1.0/experience_level/<experience_level_name>/all_countries route
+@app.route("/api/v1.0/experience_level/<experience_level_name>/all_countries")
+def salaries_by_experience_all_countries(experience_level_name):
+    print(f"Server received request for summary of salary by country for experience level: {experience_level_name}...")
+    # Query to find salaries data
+    query = f'SELECT * FROM "salaries" WHERE "{experience_column}" = ' + f"'{experience_level_name}'"
+    result = agg_dict_from_query(query, conn, country_column, False)
+    return jsonify(result)
 
 
 
