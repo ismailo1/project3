@@ -1,73 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Data Science Global Salaries</title>
+  <title>Leaflet Step-1</title>
 
   <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin="" />
 
-  <!-- Your Custom CSS -->
+  <!-- Our CSS -->
   <link rel="stylesheet" type="text/css" href="static/css/style.css">
 </head>
+
 <body>
   <div class="container">
-    <div class="title">
-      <h1>Data Science Global Salaries and much more</h1>
-      <p>Use the interactive charts below to explore the dataset</p>
-    </div>
+
+      <div class="title">
+        <h1>Data Science Global Salaries and much more</h1>
+        <p>Use the interactive charts below to explore the dataset</p>
+      </div>
+
+
+
 
     <div class="dropdown-container">
-      <!-- Dropdown for Country Selection -->
       <div class="dropdown">
         <div class="well">
           <h5>Country</h5>
           <select id="selDataset" onchange="handleCountryChange(this.value)"></select>
         </div>
-      </div>
-
-      <!-- Dropdown for Job Title Selection -->
-      <div class="dropdown">
-        <div class="well">
-          <h5>Job Title</h5>
-          <select id="selDataset1" onchange="handleJobTitleChange(this.value)"></select>
+        <div class="panel panel-primary">
+          <div id="sample-metadata" class="panel-body"></div>
         </div>
       </div>
 
-      <!-- Dropdown for Experience Level Selection -->
+      <div class="dropdown">
+        <div class="well">
+          <h5>Job Title</h5>
+          <select id="selDataset1" onchange="handleJobChange(this.value)"></select>
+        </div>
+        <div class="panel panel-primary">
+          <div id="sample-metadata" class="panel-body"></div>
+        </div>
+      </div>
+
       <div class="dropdown">
         <div class="well">
           <h5>Experience Level</h5>
           <select id="selDataset2" onchange="handleExperienceLevelChange(this.value)"></select>
         </div>
+        <div class="panel panel-primary">
+          <div id="sample-metadata" class="panel-body"></div>
+        </div>
       </div>
+
     </div>
 
-    <div class="charts-container">
-      <!-- Container for Country Bar Chart -->
+      <div class ="charts-container">
       <div class="chart">
         <div id="country-bar"></div>
+    
         <div id="country-map" style="width: 100%; height: 500px;"></div>
+
       </div>
 
-      <!-- Container for Job Title Bar Chart -->
       <div class="chart">
-        <div id="job-bar"></div> <!-- Ensure this element is present for the job title bar chart -->
+        <div id="job-bar"></div>
+    
+        <div id="job-map" style="background-color: blue;">ok</div>
       </div>
 
-      <!-- Container for Experience Level Chart (if needed) -->
       <div class="chart">
-      <div id="experience-bar"></div>
+        <div id="experience-bar"></div>
+    
+        <div id="experience-map" style="background-color: blue;">ok</div>
+      </div>
     </div>
-    </div>
+   
+
+  
   </div>
   
-  <!-- Leaflet, D3, ApexCharts, and Your Custom JavaScript -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script type="text/javascript" src="static/js/logic.js"></script>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+  <!-- D3 JavaScript -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <!-- Plotly JavaScript -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!-- Linechart JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <!-- <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> -->
+   <!-- Our JavaScript -->
+   <script type="text/javascript" src="static/js/logic.js"></script>
+
 </body>
+
 </html>

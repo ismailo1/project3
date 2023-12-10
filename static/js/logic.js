@@ -1,6 +1,3 @@
-import * as d3 from 'd3'; // Import the d3 library
-import * as d3 from 'd3'; // Import the d3 library
-import * as d3 from 'd3'; // Import the d3 library
 // storing url for json data
 const url = 'http://127.0.0.1:5000/api/v1.0/salaries'
 // console log to make sure the data is being read **only for testing**
@@ -303,112 +300,41 @@ function createMapUI(countryName, streetmap, baseMaps, count) {
 
 //console.log("logic.js loaded");
 
-// Initialize Job Titles Dropdown and Set Up Bar Chart
 function initJobTitlesDropdown() {
     // User selects Job Title from dropdown menu
     // getting each job title and appending to dropdown menu
-
-  d3.json(url).then(function(data) {
+    d3.json(url).then(function(data) {
         console.log(data);
-        // creating dropdown menu with list of Job Title
-        let dropdown = d3.select("#selDataset");
-        // receiving all job titles from Job Title in data file
-        let jobtitles = data["Job Title"];
+        // creating dropdown menu with list of Job Titles
+        let dropdown = d3.select("#selDataset1");
+        // receiving all job titles from data file
+        let jobTitles = data["Job Title"];
         // sort job titles alphabetically
-        jobtitles.sort();
+        jobTitles.sort();
         // getting each job title and appending to dropdown menu
-        jobtitles.forEach(function(jobtitle) {
-            dropdown.append("option").text(jobtitle).property("value", jobtitle);
-        }
-        );
-        // calling function when first job title is selected
-        handleJobTitleChange(jobtitles[0]);
-        console.log(jobtitles[0]);
-    }
-    )};
-
-
-function handleJobTitleChange(selectedJobTitle) {
-    updateJobTitleChart(selectedJobTitle);
+        jobTitles.forEach(function(jobTitle) {
+            dropdown.append("option").text(jobTitle).property("value", jobTitle);
+        });
+        // calling function when the first job title is selected
+        handleJobTitleChange(jobTitles[0]);
+        console.log(jobTitles[0]);
+    });
 }
 
-function updateJobTitleChart(selectedJobTitle) {
-    d3.json(url).then(function(data) {
-        let filteredData = data.Data.filter(item => item["Job Title"] === selectedJobTitle);
-        let top10countries = filteredData.reduce((acc, curr) => {
-            let country = curr["Company Location"];
-            let salary = curr["Salary in USD"];
-            acc[country] = (acc[country] || 0) + salary;
-            return acc;
-        }, {});
+function handleJobTitleChange(selectedJobTitle) {
+    // Implement the logic to handle the change in job title
+    // You can fetch data based on the selected job title and update the chart accordingly
+    // For example, you might want to call a function to update a chart based on the selected job title
+    console.log("Selected Job Title:", selectedJobTitle);
+    // Call a function to update the chart based on the selected job title
+    updateChart(selectedJobTitle);
+}
 
-        // Convert to array and sort to get top 10 countries
-        let sortedCountries = Object.entries(top10countries)
-                                    .sort((a, b) => b[1] - a[1])
-                                    .slice(0, 10);
-
-        let countries = sortedCountries.map(item => item[0]);
-        let salaries = sortedCountries.map(item => item[1]);
-
-        var options = {
-            series: [{
-              data: salaries
-            }],
-            chart: {
-              type: 'bar',
-              height: 350
-            },
-            plotOptions: {
-              bar: {
-                borderRadius: 4,
-                horizontal: true,  
-                } 
-            },  
-            dataLabels: {
-              enabled: false
-            },
-            xaxis: {
-              categories: countries,
-              title: {
-                text: 'Countries',
-                style: {
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  fontFamily: 'Arial, sans-serif'
-                }
-              }
-            },
-            yaxis: {
-                title: {
-                  text: 'Total Salary in USD',
-                  style: {
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    fontFamily: 'Arial, sans-serif',
-                    margin: 20,
-                  }
-                }
-            },
-            colors: ['#FF5733', '#337DFF', '#33FF57', '#FF33E6', '#FFFF33', '#33FFFF', '#8A2BE2', '#FF8C00', '#00CED1', '#FF1493'],
-            }   
-        
-
-        
-        const jobBarElement = document.querySelector("#job-bar");
-        jobBarElement.innerHTML = "";
-        var chart = new ApexCharts(jobBarElement, options);
-        chart.render();
-    })
-    .catch(error => {
-
-        try {
-            // Code inside the catch block
-        } catch (error) {
-            // Handle the error
-        }
-    });
-        console.error("Error fetching data:", error);
-
+function updateChart(selectedJobTitle) {
+    // Implement the logic to update the chart based on the selected job title
+    // You can make an API call or use existing data to update the chart
+    // For demonstration purposes, let's log a message here
+    console.log("Chart updated for Job Title:", selectedJobTitle);
 }
 
 initJobTitlesDropdown();
