@@ -16,7 +16,7 @@ Our sophisticated visuals provide profound insights:
 
 2.	an interactive Map displaying total number of all job titles with a popup marker
 
-> **API route:** `/api/v1.0/country/<country_name>/job_titles_summary`
+> **API route:** `/api/v1.0/country/<country_name>/job_title_counts`
 
 **By Selecting JOB TITLE from Dropdown2**
 
@@ -50,7 +50,81 @@ This initiative serves as your compass for well-informed decisions in hiring, jo
 
 To visualize the dashboard, clone the repository into your machine and run the app.py flask application using `python app.py` from Terminal. The Home page (i.e. `/`) will display the dashboard.
 
-Additionaly, you can access the API via this same application. For route explanation go to the `/api/v1.0/` page.
+Additionaly, you can access the API via this same application. For route explanation go to the `/api/v1.0/` page or see API routes below.
+
+### Python dependencies
+
+You will need to have installed the following python packages:
+
+- `flask`
+
+- `pandas`
+
+- `numpy`
+
+- `sqlalchemy`
+
+- `sqlalchemy_utils`
+
+- `psycopg2`
+
+### API routes
+
+Our API has a static route that returns all the individual data points, along with the distinct values present in the dataset for the `Company Location`, `Job Title`, `Expertise Level` columns.
+
+To access this route, follow this relative route after stating your local server: `/api/v1.0/salaries`
+
+The returned data is in json format and follows this structure:
+
+```json
+
+{
+    "Company Location": [
+        "Canada",
+        "Germany",
+        "India"
+    ],
+    "Data": [{
+            "Company Location": "Canada",
+            "Company Size": "Large",
+            "Employment Type": "Contract",
+            "Expertise Level": "Junior",
+            "Job Title": "Staff Data Analyst",
+            "Salary in USD": 44753,
+            "Year": 2020
+        },
+        {
+            "Company Location": "Germany",
+            "Company Size": "Medium",
+            "Employment Type": "Full-Time",
+            "Expertise Level": "Junior",
+            "Job Title": "AI Engineer",
+            "Salary in USD": 35000,
+            "Year": 2023
+        },
+        {
+            "Company Location": "India",
+            "Company Size": "Large",
+            "Employment Type": "Full-Time",
+            "Expertise Level": "Expert",
+            "Job Title": "Data Science Manager",
+            "Salary in USD": 94665,
+            "Year": 2021
+        }
+    ],
+    "Expertise Level": [
+        "Expert",
+        "Junior"
+    ],
+    "Job Title": [
+        "Staff Data Analyst",
+        "AI Engineer",
+        "Data Science Manager"
+    ]
+}
+
+```
+
 
 
 ---
