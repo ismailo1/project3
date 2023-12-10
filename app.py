@@ -194,6 +194,9 @@ def api_routes():
 
     '''
 
+# Define a new route that will display the Top 10 highest paying salaries for selected country, use window functions
+# @app.route("/top10salaries")
+
 
 # Define what to do when a user hits the /api/v1.0/salaries route
 @app.route("/api/v1.0/salaries")

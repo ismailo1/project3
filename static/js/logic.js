@@ -1,7 +1,7 @@
 // storing url for json data
 const url = 'http://127.0.0.1:5000/api/v1.0/salaries'
 // console log to make sure the data is being read **only for testing**
-console.log(url);
+// console.log(url);
 
 // define myMap
 // let myMap;
@@ -10,6 +10,7 @@ console.log(url);
 
 // creating an init function to display dropdown menu with list of countries receiving all country names from data file
 function init1() {
+    console.log("running init1");
     // User selects Country from dropdown menu
     // getting each country name and appending to dropdown menu
     d3.json(url).then(function(data) {
@@ -40,6 +41,9 @@ init1();
 
 // defining a function to be used to display a Horizontal Bar Chart that updates upon selecting a country, and x-axis giving top 10 highest paying salaries and y-axis giving these job titles in ascending order
 function horizontalbarchart(salariesArray, passedcountry) {
+    console.log("running horizontalbarchart; here are the salariesArray and passedcountry:");
+    console.log(salariesArray);
+    console.log(passedcountry);
     // Sorting salaries in descending order
     salariesArray.sort((a, b) => b - a);
     // Selecting the top 10 highest paying salaries
@@ -67,24 +71,27 @@ function horizontalbarchart(salariesArray, passedcountry) {
 }
 
 
-console.log(horizontalbarchart);
+// console.log(horizontalbarchart);
 // calling function to display horizontal bar chart
-horizontalbarchart(salariesArray, passedcountry);
+// horizontalbarchart(salariesArray, passedcountry);
 
 // Move the horizontalbarchart function outside of the firstchartvalues function
 function firstchartvalues(passedcountry) {
     // fetch json data using d3 and console log
+    console.log("running firstchartvalues");
     d3.json(url).then(function(data) {
-        console.log(data);
+        
         // filter data for the country selected
         let filteredcountrydata = data.Data.filter(function(entry) {
             return entry["Company Location"] === passedcountry;
         });
-
+        // console.log(filteredcountrydata);
         if (filteredcountrydata.length > 0) {
             // Extracting salaries for the selected country
-            let salariesArray = filteredcountrydata.map(entry => entry["Salary"]);
-            
+            let salariesArray = filteredcountrydata.map(entry => entry["Salary in USD"]);
+            console.log("Here is the filteredcountrydata and salariesArray:");
+            console.log(filteredcountrydata);
+            console.log(salariesArray);
             // calling function to display horizontal bar chart
             horizontalbarchart(salariesArray, passedcountry);
             // // calling function to display interactive map
