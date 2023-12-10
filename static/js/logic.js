@@ -323,6 +323,7 @@ function initJobTitlesDropdown() {
 
 function handleJobTitleChange(selectedJobTitle) {
     // Implement the logic to handle the change in job title
+
     // You can fetch data based on the selected job title and update the chart accordingly
     // For example, you might want to call a function to update a chart based on the selected job title
     console.log("Selected Job Title:", selectedJobTitle);
@@ -331,10 +332,77 @@ function handleJobTitleChange(selectedJobTitle) {
 }
 
 function updateChart(selectedJobTitle) {
+    const top10countriesURL =  `http://127.0.0.1:5000//api/v1.0/job_title/${selectedJobTitle}/top10_countries`
     // Implement the logic to update the chart based on the selected job title
+    d3.json(top10countriesURL).then(function(data) {
+        console.log(data);
+        let salaries = [];
+        let countriesArray = [];
+        for (let key in data.max_salary) {
+            if (data.max_salary.hasOwnProperty(key)) {
+                salaries.push(data.max_salary[key][1]);
+                countriesArray.push(data.max_salary[key][0]);
+            }
+        }
+        console.log(salaries);
+        console.log(countriesArray);
+    
+        var options = {
+            series: [{
+              data: salaries
+            }],
+            chart: {
+              type: 'bar',
+              height: 350
+            },
+            plotOptions: {
+              bar: {
+                borderRadius: 4,
+                horizontal: true,
+              }
+            },
+            dataLabels: {
+              enabled: false
+            },
+            xaxis: {
+              categories: countriesArray,
+              title: {
+                text: 'Salaries in USD', // Label for X-axis
+                style: {
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  fontFamily: 'Arial, sans-serif'
+                }
+              }
+            },
+            yaxis: {
+                title: {
+                  text: 'Countries', // Label for Y-axis
+                  style: {
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    fontFamily: 'Arial, sans-serif',
+                    margin: 20
+
+                  }
+                }
+              },
+            colors: ['#FF5733', '#337DFF', '#33FF57', '#FF33E6', '#FFFF33', '#33FFFF', '#8A2BE2', '#FF8C00', '#00CED1', '#FF1493'], // Ten different hexadecimal color codes
+          };
+          
+    
+          
+      const countryBarElement = document.querySelector("#country-bar");
+        countryBarElement.innerHTML = "";
+      var chart = new ApexCharts(countryBarElement, options);
+      chart.render();
+
+    });
     // You can make an API call or use existing data to update the chart
+
     // For demonstration purposes, let's log a message here
     console.log("Chart updated for Job Title:", selectedJobTitle);
+    
 }
 
 initJobTitlesDropdown();
