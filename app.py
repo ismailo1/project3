@@ -56,7 +56,7 @@ def dict_from_query(query_string, conn_object):
     return result_dictionary
 
 # function to return top 10 mean salaries given a query, conn and grouping column
-def dict_from_query_top10(query_string, conn_object, group_by_column):
+def agg_dict_from_query(query_string, conn_object, group_by_column, top10=True):
     # Read query directly into pandas df
     df = pd.read_sql(query_string, conn_object)
     print(f'Total records retrieved from salaries table: {len(df)}')
@@ -86,39 +86,6 @@ def dict_from_query_top10(query_string, conn_object, group_by_column):
             record_data = result[col_name][record]
             result[col_name][record] = [
                 record_data[group_by_column],
-                record_data['salary']
-            ]
-    return result
-
-def dict_from_query_percent_increase(query_string, conn_object):
-    # Read query directly into pandas df
-    df = pd.read_sql(query_string, conn_object)
-    print(f'Total records retrieved from salaries table: {len(df)}')
-    print(f'Grouping by column: {expertise_column}')
-
-    df = (df
-        .groupby(expertise_column)
-        .agg(
-            by_mean_salary = (salary_column, 'mean'),
-            by_max_salary = (salary_column, 'max'),
-            by_min_salary = (salary_column, 'min'),
-            by_median_salary = (salary_column, lambda x: np.median(x))
-        )
-    )
-    result = {}
-    for col_name in df:
-        col_top10 = (df[col_name]
-            .rename('salary')
-            .sort_values(ascending=False)
-            .reset_index(drop=False)
-        )
-        col_top10.index += 1 
-        # organize result in dictionary of dictionaries
-        result[col_name] = col_top10.to_dict(orient='index')
-        for record in result[col_name]:
-            record_data = result[col_name][record]
-            result[col_name][record] = [
-                record_data[expertise_column],
                 record_data['salary']
             ]
     return result
@@ -189,7 +156,7 @@ def api_routes():
         <li><strong>/api/v1.0/&lt;column_name&gt;/&lt;value&gt;</strong>: returns data filtered using the specified column/value pair. (e.g. <i>/api/v1.0/Company Location/Canada</i> will return all positions where the company is located in Canada)</li>
         <li><strong>/api/v1.0/country/&lt;country_name&gt;/top10_job_titles</strong>: returns data filtered by the indicated country_name, from the Company Location column. It returns the top 10 job titles by several different summary statistics of the salary in USD (e.g. <i>/api/v1.0/country/Canada/top10_job_titles</i> will return the top 10 job titles by salary where the company is based in Canada, as a list of dictionaries, one dictionary for each summary statistic: mean, max, min and median)</li>
         <li><strong>/api/v1.0/top10_countries_by_title/&lt;title_name&gt;</strong>: returns data filtered by the indicated title_name. It returns the top 10 countries by several different summary statistics of the salary in USD (e.g. <i>/api/v1.0/top10_countries_by_title/Data Analyst</i> will return the top 10 countries based on salary of the Data Analyst job title, as a list of dictionaries, one dictionary for each summary statistic: mean, max, min and median)</li>
-        <li><strong>/api/v1.0/change_with_experience_by_title/&lt;title_name&gt;</strong>: returns data filtered by the indicated title_name and the several different summary statistics of the salary in USD for each experitise level (e.g. <i>/api/v1.0/change_with_experience_by_title/Data Analyst</i> will return the summary statisting for the salary of different expertise levels for the Data Analyst job title, as a list of dictionaries, one dictionary for each summary statistic: mean, max, min and median)</li>
+        <li><strong>/api/v1.0/job_title/&lt;title_name&gt;/expertise_levels</strong>: returns data filtered by the indicated title_name and the several different summary statistics of the salary in USD for each experitise level (e.g. <i>/api/v1.0/job_title/Data Analyst/expertise_levels</i> will return the summary statisting for the salary of different expertise levels for the Data Analyst job title, as a list of dictionaries, one dictionary for each summary statistic: mean, max, min and median)</li>
     </ul>
 
     '''
@@ -222,26 +189,26 @@ def salaries_by_country_top10_titles(country_name):
     print(f"Server received request for top 10 payed job titles in {country_name}...")
     # Query to find salaries data
     query = f'SELECT * FROM "salaries" WHERE "{country_column}" = ' + f"'{country_name}'"
-    result = dict_from_query_top10(query, conn, 'Job Title')
+    result = agg_dict_from_query(query, conn, title_column)
     return jsonify(result)
 
 
 # Define what to do when a user hits the /api/v1.0/job_title/<job_title>/top10_countries route
 @app.route("/api/v1.0/job_title/<job_title>/top10_countries")
 def salaries_by_title_top10_countries(job_title_name):
-    print(f"Server received request for top 10 payed countries as a {job_title_name}...")
+    print(f"Server received request for top 10 payed countries for job title: {job_title_name}...")
     # Query to find salaries data
     query = f'SELECT * FROM "salaries" WHERE "{title_column}" = ' + f"'{job_title_name}'"
-    result = dict_from_query_top10(query, conn, 'Company Location')
+    result = agg_dict_from_query(query, conn, country_column)
     return jsonify(result)
 
 # Define what to do when a user hits the /api/v1.0/change_with_experience_by_title/<title_name> route
-@app.route("/api/v1.0/change_with_experience_by_title/<title_name>")
-def percent_increase_with_experience_by_title(title_name):
-    print(f"Server received request for percent_increase_with_experience_by_title {title_name}...")
+@app.route("/api/v1.0/job_title/<job_title>/expertise_levels")
+def salaries_by_title_expertise_levels(job_title_name):
+    print(f"Server received request for salary summary by expertise level for job title: {job_title_name}...")
     # Query to find salaries data
-    query = f'SELECT * FROM "salaries" WHERE "{title_column}" = ' + f"'{title_name}'"
-    result = dict_from_query_percent_increase(query, conn)
+    query = f'SELECT * FROM "salaries" WHERE "{title_column}" = ' + f"'{job_title_name}'"
+    result = agg_dict_from_query(query, conn, expertise_column, False)
     return jsonify(result)
 
 # 6) mean salary by job title and expertise grouping -> return together with individual data points
