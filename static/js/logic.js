@@ -9,8 +9,8 @@ const url = 'http://127.0.0.1:5000/api/v1.0/salaries'
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // creating an init function to display dropdown menu with list of countries receiving all country names from data file
-function init1() {
-    console.log("running init1");
+function initCountriesDropdown() {
+ 
     // User selects Country from dropdown menu
     // getting each country name and appending to dropdown menu
     d3.json(url).then(function(data) {
@@ -19,68 +19,100 @@ function init1() {
         let dropdown = d3.select("#selDataset");
         // receiving all country names from countries in data file
         let countries = data["Company Location"];
+        // sort countries alphabetically
+        countries.sort();
         // getting each country name and appending to dropdown menu
         countries.forEach(function(country) {
             dropdown.append("option").text(country).property("value", country);
         });
         // calling function when first country is selected
-        firstchartvalues(countries[0]);
+        handleCountryChange(countries[0]);
         console.log(countries[0]);
     });
-    };
-
-
-// creating an optionChanged function when country is changed by user and calling functions when country is changed
-function optionChanged(passedcountry) {
-    firstchartvalues(passedcountry);
 };
 
-// console.log("init1");
-
-init1();
+initCountriesDropdown();
 
 // defining a function to be used to display a Horizontal Bar Chart that updates upon selecting a country, and x-axis giving top 10 highest paying salaries and y-axis giving these job titles in ascending order
 function horizontalbarchart(salariesArray, passedcountry) {
-    console.log("running horizontalbarchart; here are the salariesArray and passedcountry:");
-    console.log(salariesArray);
-    console.log(passedcountry);
-    // Sorting salaries in descending order
-    salariesArray.sort((a, b) => b - a);
-    // Selecting the top 10 highest paying salaries
-    let topSalaries = salariesArray.slice(0, 10);
-    // Extracting job titles for the selected salaries
-    let jobTitlesArray = [];
-    topSalaries.forEach(function(salary) {
-        let index = salariesArray.indexOf(salary);
-        jobTitlesArray.push(jobTitlesArray[index]);
+
+    const top10salariesURL = `http://127.0.0.1:5000/api/v1.0/country/${passedcountry}/top10_job_titles`
+    // fetch json data using d3 and console log
+
+    d3.json(top10salariesURL).then(function(data) {
+        console.log(data);
+        let salaries = [];
+        let jobTitlesArray = [];
+        for (let key in data.max_salary) {
+            if (data.max_salary.hasOwnProperty(key)) {
+                salaries.push(data.max_salary[key][1]);
+                jobTitlesArray.push(data.max_salary[key][0]);
+            }
+        }
+        console.log(salaries);
+        console.log(jobTitlesArray);
+    
+        var options = {
+            series: [{
+              data: salaries
+            }],
+            chart: {
+              type: 'bar',
+              height: 350
+            },
+            plotOptions: {
+              bar: {
+                borderRadius: 4,
+                horizontal: true,
+              }
+            },
+            dataLabels: {
+              enabled: false
+            },
+            xaxis: {
+              categories: jobTitlesArray,
+              title: {
+                text: 'Salaries in USD', // Label for X-axis
+                style: {
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  fontFamily: 'Arial, sans-serif'
+                }
+              }
+            },
+            yaxis: {
+                title: {
+                  text: 'Job Titles', // Label for Y-axis
+                  style: {
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    fontFamily: 'Arial, sans-serif',
+                    margin: 20
+
+                  }
+                }
+              },
+            colors: ['#FF5733', '#337DFF', '#33FF57', '#FF33E6', '#FFFF33', '#33FFFF', '#8A2BE2', '#FF8C00', '#00CED1', '#FF1493'], // Ten different hexadecimal color codes
+          };
+          
+    
+          
+      const countryBarElement = document.querySelector("#country-bar");
+        countryBarElement.innerHTML = "";
+      var chart = new ApexCharts(countryBarElement, options);
+      chart.render();
+
     });
-    // Creating the bar chart
-    let tracebarchart = {
-        x: topSalaries,
-        y: jobTitlesArray,
-        type: "bar",
-        orientation: "h"
-    };
-    let databarchart = [tracebarchart];
-    let layoutbarchart = {
-        title: "Top 10 Highest-Paying Job Titles in " + passedcountry,
-        yaxis: { title: "Salary (USD)" },
-        xaxis: { title: "Job Title" }
-    };
-    Plotly.newPlot("bar", databarchart, layoutbarchart);
+    
 }
 
 
-// console.log(horizontalbarchart);
-// calling function to display horizontal bar chart
-// horizontalbarchart(salariesArray, passedcountry);
 
-// Move the horizontalbarchart function outside of the firstchartvalues function
-function firstchartvalues(passedcountry) {
-    // fetch json data using d3 and console log
-    console.log("running firstchartvalues");
+// Move the horizontalbarchart function outside of the handleCountryChange function
+function handleCountryChange(passedcountry) {
+
     d3.json(url).then(function(data) {
-        
+        console.log(data);
         // filter data for the country selected
         let filteredcountrydata = data.Data.filter(function(entry) {
             return entry["Company Location"] === passedcountry;
@@ -89,34 +121,16 @@ function firstchartvalues(passedcountry) {
         if (filteredcountrydata.length > 0) {
             // Extracting salaries for the selected country
             let salariesArray = filteredcountrydata.map(entry => entry["Salary in USD"]);
-            console.log("Here is the filteredcountrydata and salariesArray:");
-            console.log(filteredcountrydata);
-            console.log(salariesArray);
-            // calling function to display horizontal bar chart
             horizontalbarchart(salariesArray, passedcountry);
-            // // calling function to display interactive map
-            // createMap(filteredcountrydata);
+        // // calling function to display interactive map
+            // createMap(filteredcountrydata);    
         } else {
             console.log("No data available for the selected country.");
         }
     });
 }
 
-console.log(horizontalbarchart);
 
-// calling function to display horizontal bar chart
-horizontalbarchart(salariesArray, passedcountry);
-
-// init1();
-
-// console log salariesArray here
-console.log(salariesArray);
-
-// console log passedcountry here
-console.log(passedcountry);
-
-// console log filteredcountrydata here
-console.log(filteredcountrydata);
 
 
 
@@ -176,8 +190,8 @@ function getColor(salary) {
 
 
 // Creating a function for an interactive Map that evolves with country selection, offering understanding of job title density and count globally
-function createMap(datascience) {
-    console.log(datascience);
+function createMap() {
+   
 
     // Adding a tile layer (the background map image) to our map
     let streetmap = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -193,17 +207,19 @@ function createMap(datascience) {
         "Street Map": streetmap,
         "Dark Map": darkmap
     };
+
+
         
-    // creating overlay object to hold our overlay layer
+    // creating overlay object TO HOld dummy data
     let overlayMaps = {
-        "Job Title Density": jobtitledensity
+        "Job Titles":   
     };
     
     // creating our map, giving it the streetmap and jobtitledensity layers to display on load
-    let myMap = L.map("map", {
+    let myMap = L.map("country-map", {
         center: [37.09, -95.71],
         zoom: 2,
-        layers: [streetmap, jobtitledensity]
+        layers: [streetmap, ]
     });
     
             
@@ -219,15 +235,9 @@ function createMap(datascience) {
 
 console.log("logic.js loaded");
 
-
-
-
-
-// console log init here
-// console.log("init1");
-
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+/*
 // creating an init function to display dropdown menu with list of job titles, receiving all job titles from data file, and calling functions when job title is changed
 function init2() {
     // getting each job title and appending to dropdown menu
@@ -321,15 +331,14 @@ function linegraph(filteredjobtitledata) {
     Plotly.newPlot("line", datalinegraph, layoutlinegraph);
 }
 
-    console.log(verticalbarchart);
-    console.log(linegraph);
 
-    console.log("logic.js loaded");
+*/
 
-
+console.log(asmndbasf);
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // creating an init function to display dropdown menu with list of expertise levels receiving all expertise levels from data file
+/*
 function init3() {
     // getting each job title and appending to dropdown menu
     d3.json(url).then(function(data) {
@@ -430,4 +439,4 @@ console.log(expertise);
 // console.log("init");
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+*/
