@@ -24,48 +24,48 @@ size_column = 'Company Size'
 year_column = 'Year'
 
 # function to return result dictionary, given a query string and a connection object
-def dict_from_query(query_string, conn_object):
-    # Instead of using:
-    # data = conn.execute(text(query)).all()
-    # Read query directly into pandas df
-    df = pd.read_sql(query_string, conn_object)
-    print(f'Total records retrieved from salaries table: {len(df)}')
-    # Df to list of dictionaries
-    data_list = df.to_dict(orient='records')
-    # Create empty lists to add data
-    job_titles = []
-    countries = []
-    experience_levels = []
-    # Loop through query results and put data values into a list
-    for row in data_list:
-        row_dict = {}
-        for column in columns:
-            row_dict[column] = row[column]
-        job_titles.append(row_dict[title_column])
-        countries.append(row_dict[country_column])
-        experience_levels.append(row_dict[experience_column])
-    countries = list(set(countries))
-    job_titles = list(set(job_titles))
-    experience_levels = list(set(experience_levels))
-    result_dictionary = {
-        country_column: countries,
-        title_column: job_titles,
-        experience_column: experience_levels,
-        'Data': data_list
-    }
-    return result_dictionary
-
-# function to return result dictionary, given a query string that counts and a connection object
-def dict_from_summary_query(query_string, conn_object):
+# argument only_data: boolean for whether to return only the data that is returned by the query (True) or
+# also return unique values for country, job_title and experience_level (False, the default)
+def dict_from_query(query_string, conn_object, only_data=False):
     # Instead of using:
     # data = conn.execute(text(query)).all()
     # Read query directly into pandas df
     df = pd.read_sql(query_string, conn_object)
     print(f'Total groups counted from salaries table: {len(df)}')
-    # Df to list of dictionaries
-    data_list = df.set_index(title_column).to_dict(orient='index')
-    return data_list
-
+    if only_data:
+        # Df to list of dictionaries
+        data_list = df.set_index(title_column).to_dict(orient='index')
+        return data_list
+    else:
+        try:
+            # Df to list of dictionaries
+            data_list = df.to_dict(orient='records')
+            # Create empty lists to add data
+            job_titles = []
+            countries = []
+            experience_levels = []
+            # Loop through query results and put data values into a list
+            for row in data_list:
+                row_dict = {}
+                for column in columns:
+                    row_dict[column] = row[column]
+                job_titles.append(row_dict[title_column])
+                countries.append(row_dict[country_column])
+                experience_levels.append(row_dict[experience_column])
+            countries = list(set(countries))
+            job_titles = list(set(job_titles))
+            experience_levels = list(set(experience_levels))
+            result_dictionary = {
+                country_column: countries,
+                title_column: job_titles,
+                experience_column: experience_levels,
+                'Data': data_list
+            }
+            return result_dictionary
+        except KeyError:
+            # Df to list of dictionaries
+            result_dictionary = df.set_index(title_column).to_dict(orient='index')
+            return data_list
 
 # function to return summary of salaries given a query, conn and grouping column, 
 # top10 argument defines if return only top10 desc or all data (defaults to True)
@@ -258,22 +258,17 @@ def salaries_by_experience_all_countries(experience_level_name):
     result = agg_dict_from_query(query, conn, country_column, False)
     return jsonify(result)
 
-# Define what to do when a user hits the /api/v1.0/country/<country_name>/job_titles_summary route
-@app.route("/api/v1.0/country/<country_name>/job_titles_summary")
+# Define what to do when a user hits the /api/v1.0/country/<country_name>/job_title_counts route
+@app.route("/api/v1.0/country/<country_name>/job_title_counts")
 def summary_job_titles_by_country(country_name):
-    print(f"Server received request for summary of job titles in {country_name}...")
+    print(f"Server received request for count of job titles in {country_name}...")
     # Query to find salaries data
-    query = f'SELECT "{title_column}", '+\
-        f'AVG("{salary_column}") AS mean_salary, '+\
-        f'MAX("{salary_column}") AS max_salary, '+\
-        f'MIN("{salary_column}") AS min_salary, '+\
-        f'COUNT(*) '+f'FROM "salaries" '+\
+    query = f'SELECT "{title_column}", ' +\
+        f'COUNT(*) '+f'FROM "salaries" ' +\
         f'WHERE "{country_column}" = ' + f"'{country_name}' " +\
         f'GROUP BY "{title_column}"'
-    result = dict_from_summary_query(query, conn)
+    result = dict_from_query(query, conn, True)
     return jsonify(result)
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)
