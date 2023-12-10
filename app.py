@@ -187,7 +187,7 @@ def api_routes():
     <p>Available dynamic route:</p>
     <ul>
         <li><strong>/api/v1.0/&lt;column_name&gt;/&lt;value&gt;</strong>: returns data filtered using the specified column/value pair. (e.g. <i>/api/v1.0/Company Location/Canada</i> will return all positions where the company is located in Canada)</li>
-        <li><strong>/api/v1.0/top10_titles_by_country/&lt;country_name&gt;</strong>: returns data filtered by the indicated country_name, from the Company Location column. It returns the top 10 job titles by several different summary statistics of the salary in USD (e.g. <i>/api/v1.0/top10_titles_by_country/Canada</i> will return the top 10 job titles by salary where the company is based in Canada, as a list of dictionaries, one dictionary for each summary statistic: mean, max, min and median)</li>
+        <li><strong>/api/v1.0/country/&lt;country_name&gt;/top10_job_titles</strong>: returns data filtered by the indicated country_name, from the Company Location column. It returns the top 10 job titles by several different summary statistics of the salary in USD (e.g. <i>/api/v1.0/country/Canada/top10_job_titles</i> will return the top 10 job titles by salary where the company is based in Canada, as a list of dictionaries, one dictionary for each summary statistic: mean, max, min and median)</li>
         <li><strong>/api/v1.0/top10_countries_by_title/&lt;title_name&gt;</strong>: returns data filtered by the indicated title_name. It returns the top 10 countries by several different summary statistics of the salary in USD (e.g. <i>/api/v1.0/top10_countries_by_title/Data Analyst</i> will return the top 10 countries based on salary of the Data Analyst job title, as a list of dictionaries, one dictionary for each summary statistic: mean, max, min and median)</li>
         <li><strong>/api/v1.0/change_with_experience_by_title/&lt;title_name&gt;</strong>: returns data filtered by the indicated title_name and the several different summary statistics of the salary in USD for each experitise level (e.g. <i>/api/v1.0/change_with_experience_by_title/Data Analyst</i> will return the summary statisting for the salary of different expertise levels for the Data Analyst job title, as a list of dictionaries, one dictionary for each summary statistic: mean, max, min and median)</li>
     </ul>
@@ -213,8 +213,8 @@ def salaries_filter(column_name, value):
     result = dict_from_query(query, conn)
     return jsonify(result)
 
-# Define what to do when a user hits the /api/v1.0/top10_titles_by_country/<country_name> route
-@app.route("/api/v1.0/top10_titles_by_country/<country_name>")
+# Define what to do when a user hits the /api/v1.0/country/<country_name>/top10_job_titles route
+@app.route("/api/v1.0/country/<country_name>/top10_job_titles")
 def salaries_by_country_top10_titles(country_name):
     print(f"Server received request for top 10 payed job titles in {country_name}...")
     # Query to find salaries data
@@ -223,12 +223,12 @@ def salaries_by_country_top10_titles(country_name):
     return jsonify(result)
 
 
-# Define what to do when a user hits the /api/v1.0/top10_countries_by_title/<title_name> route
-@app.route("/api/v1.0/top10_countries_by_title/<title_name>")
-def salaries_by_title_top10_countries(title_name):
-    print(f"Server received request for top 10 payed countries as a {title_name}...")
+# Define what to do when a user hits the /api/v1.0/job_title/<job_title>/top10_countries route
+@app.route("/api/v1.0/job_title/<job_title>/top10_countries")
+def salaries_by_title_top10_countries(job_title_name):
+    print(f"Server received request for top 10 payed countries as a {job_title_name}...")
     # Query to find salaries data
-    query = f'SELECT * FROM "salaries" WHERE "{title_column}" = ' + f"'{title_name}'"
+    query = f'SELECT * FROM "salaries" WHERE "{title_column}" = ' + f"'{job_title_name}'"
     result = dict_from_query_top10(query, conn, 'Company Location')
     return jsonify(result)
 
@@ -240,7 +240,12 @@ def percent_increase_with_experience_by_title(title_name):
     query = f'SELECT * FROM "salaries" WHERE "{title_column}" = ' + f"'{title_name}'"
     result = dict_from_query_percent_increase(query, conn)
     return jsonify(result)
+
 # 6) mean salary by job title and expertise grouping -> return together with individual data points
+
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
