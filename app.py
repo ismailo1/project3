@@ -214,8 +214,10 @@ def salaries_by_country_all_titles(country_name):
 
 
 # Define what to do when a user hits the /api/v1.0/job_title/<job_title>/top10_countries route
-@app.route("/api/v1.0/job_title/<job_title>/top10_countries")
+@app.route("/api/v1.0/job_title/<job_title_name>/top10_countries")
 def salaries_by_title_top10_countries(job_title_name):
+    # job is with a space, so replace with underscore
+    
     print(f"Server received request for top 10 payed countries for job title: {job_title_name}...")
     # Query to find salaries data
     query = f'SELECT * FROM "salaries" WHERE "{title_column}" = ' + f"'{job_title_name}'"

@@ -1,24 +1,13 @@
-# Salaries in Data World
+# Tech Career Analytics and Insights Hub
+## Highest Paying Countries, Highest Salary Experience Levels and much more.
+### Use the interactive charts below to explore the dataset, explore salary trends and make informed decisions.
+#### This tool is designed to empower you with valuable insights for strategic decisions in global job seeking, hiring, global HR strategies.
 
-Project 3 - Group 1 by Ismail Omer, Yargi Kilinc, Archit Hallan, Tania Barrera
+![image](https://github.com/YargKlnc/Project3-DataWorld/assets/142269763/c3fd3e07-eedc-4dc3-ad61-feab30eff45b)
+
+**Project 3 - Group 1 by Ismail Omer, Yargi Kilinc, Archit Hallan, Tania Barrera**
 
 We are delighted to present Project 3, a comprehensive exploration tailored for employers, job seekers in the data realm, individuals contemplating joining a bootcamp, and esteemed global HR companies.
-
-NOTES by Yargi:
-
-- New library jsdelivr.com was used
-- HTML file revised
-- Style.css revised
-- Countries sorted in alphabetical order for Dropdown1
-- Body color, head color, bar chart color&style revised in style.css
-- New API routes used and added as const url`s
-- lat-long coming from selected country
-- Popup opening on interactive map1 that displays total number of jobs only for the selected country
-- init2 and init3 commented-out (erased),
-- new pseudo code added for view2 and view3
-
-![Dashboard View1](https://github.com/ismailo1/project3/assets/142269763/a23de68a-96a0-4e77-8e6e-85caedf240bb)
-
 
 Our sophisticated visuals provide profound insights:
 
@@ -46,7 +35,7 @@ Our sophisticated visuals provide profound insights:
 
 **By Selecting EXPERIENCE LEVEL from Dropdown3**
 
-5.	a line chart that displays Top10 highest paying countries for that experience level 
+5.	a line graph that displays Top10 highest paying countries for that experience level 
 
 > **API route:** `/api/v1.0/experience_level/<experience_level_name>/top10_countries`
 
@@ -55,11 +44,6 @@ Our sophisticated visuals provide profound insights:
 > **API route:** `/api/v1.0/experience_level/<experience_level_name>/all_countries`
 
 ![image](https://github.com/ismailo1/project3/assets/142269763/c0015b2a-1c6d-4eb8-948e-b20085f859a7)
-
-
-This initiative serves as your compass for well-informed decisions in hiring, job seeking, bootcamp considerations, and global HR strategies.
-
-![image](https://github.com/ismailo1/project3/assets/142269763/f32a5946-e8c9-4451-aab3-e94490ec2b0d)
 
 
 ## How to
@@ -142,4 +126,12 @@ The returned data is in json format and follows this structure:
 
 ## References
 
-Head photo rights belongs to https://www.digitalvidya.com/blog/data-science-jobs/
+https://www.openstreetmap.org/
+
+https://opencagedata.com/api
+
+https://www.kaggle.com/datasets/iamsouravbanerjee/data-science-salaries-2023/data
+
+https://www.jsdelivr.com/
+
+https://apexcharts.com/javascript-chart-demos/

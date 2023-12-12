@@ -19,18 +19,17 @@
 <body>
   <div class="container">
 
-      <div class="title">
-        <h1>Data Science Global Salaries and much more</h1>
-        <p>Use the interactive charts below to explore the dataset</p>
-      </div>
-
-
-
+    <div class="title">
+      <h1>Tech Career Analytics and Insights Hub</h1>
+      <p>- Explore Salary Trends and Make Informed Decisions</p>
+      <p>- Use the interactive charts below to navigate salary data for top job titles, countries, and experience levels.</p>
+      <p>- This tool empowers you with valuable insights for strategic decisions in global job seeking, hiring, global HR strategies.</p>
+    </div>
 
     <div class="dropdown-container">
       <div class="dropdown">
         <div class="well">
-          <h5>Country</h5>
+          <h5>Select a Country</h5>
           <select id="selDataset" onchange="handleCountryChange(this.value)"></select>
         </div>
         <div class="panel panel-primary">
@@ -38,20 +37,20 @@
         </div>
       </div>
 
-      <div class="dropdown">
+      <div class="dropdownjobtitle">
         <div class="well">
-          <h5>Job Title</h5>
-          <select id="selDataset1" onchange="handleJobChange(this.value)"></select>
+          <h5>Select a Job Title</h5>
+          <select id="jobDataset" onchange="handleJobTitleChange(this.value)"></select>
         </div>
         <div class="panel panel-primary">
           <div id="sample-metadata" class="panel-body"></div>
         </div>
       </div>
 
-      <div class="dropdown">
+      <div class="dropdownexperiencelevel">
         <div class="well">
-          <h5>Experience Level</h5>
-          <select id="selDataset2" onchange="handleExperienceLevelChange(this.value)"></select>
+          <h5>Select an Experience Level</h5>
+          <select id="expDataset" onchange="handleExperienceLevelChange(this.value)"></select>
         </div>
         <div class="panel panel-primary">
           <div id="sample-metadata" class="panel-body"></div>
@@ -60,31 +59,25 @@
 
     </div>
 
-      <div class ="charts-container">
+    <div class="charts-container">
       <div class="chart">
         <div id="country-bar"></div>
-    
         <div id="country-map" style="width: 100%; height: 500px;"></div>
-
       </div>
 
       <div class="chart">
-        <div id="job-bar"></div>
-    
-        <div id="job-map" style="background-color: blue;">ok</div>
+        <div id="job-line-graph"></div>
+        <div id="job-map" style="width: 100%; height: 500px"></div>
       </div>
 
       <div class="chart">
-        <div id="experience-bar"></div>
-    
-        <div id="experience-map" style="background-color: blue;">ok</div>
+        <div id="experience-line-chart"></div>
+        <div id="experience-map" style="width: 100%; height: 500px"></div>
       </div>
     </div>
-   
 
-  
   </div>
-  
+
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -95,9 +88,10 @@
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <!-- Linechart JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-  <!-- <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> -->
-   <!-- Our JavaScript -->
-   <script type="text/javascript" src="static/js/logic.js"></script>
+  <!-- Our JavaScript -->
+  <script type="text/javascript" src="static/js/country.js"></script>
+  <script type="text/javascript" src="static/js/jobs.js"></script>
+  <script type="text/javascript" src="static/js/experience.js"></script>
 
 </body>
 
