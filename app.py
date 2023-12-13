@@ -194,6 +194,18 @@ def salaries_filter(column_name, value):
     result = dict_from_query(query, conn)
     return jsonify(result)
 
+# Define what to do when a user hits the /api/v1.0/country/<country_name>/job_title_counts route
+@app.route("/api/v1.0/country/<country_name>/job_title_counts")
+def summary_job_titles_by_country(country_name):
+    print(f"Server received request for count of job titles in {country_name}...")
+    # Query to find salaries data
+    query = f'SELECT "{title_column}", ' +\
+        f'COUNT(*) '+f'FROM "salaries" ' +\
+        f'WHERE "{country_column}" = ' + f"'{country_name}' " +\
+        f'GROUP BY "{title_column}"'
+    result = dict_from_query(query, conn, True)
+    return jsonify(result)
+
 # Define what to do when a user hits the /api/v1.0/country/<country_name>/top10_job_titles route
 @app.route("/api/v1.0/country/<country_name>/top10_job_titles")
 def salaries_by_country_top10_titles(country_name):
@@ -211,7 +223,6 @@ def salaries_by_country_all_titles(country_name):
     query = f'SELECT * FROM "salaries" WHERE "{country_column}" = ' + f"'{country_name}'"
     result = agg_dict_from_query(query, conn, title_column, False)
     return jsonify(result)
-
 
 # Define what to do when a user hits the /api/v1.0/job_title/<job_title>/top10_countries route
 @app.route("/api/v1.0/job_title/<job_title_name>/top10_countries")
@@ -258,18 +269,6 @@ def salaries_by_experience_all_countries(experience_level_name):
     # Query to find salaries data
     query = f'SELECT * FROM "salaries" WHERE "{experience_column}" = ' + f"'{experience_level_name}'"
     result = agg_dict_from_query(query, conn, country_column, False)
-    return jsonify(result)
-
-# Define what to do when a user hits the /api/v1.0/country/<country_name>/job_title_counts route
-@app.route("/api/v1.0/country/<country_name>/job_title_counts")
-def summary_job_titles_by_country(country_name):
-    print(f"Server received request for count of job titles in {country_name}...")
-    # Query to find salaries data
-    query = f'SELECT "{title_column}", ' +\
-        f'COUNT(*) '+f'FROM "salaries" ' +\
-        f'WHERE "{country_column}" = ' + f"'{country_name}' " +\
-        f'GROUP BY "{title_column}"'
-    result = dict_from_query(query, conn, True)
     return jsonify(result)
 
 if __name__ == "__main__":
